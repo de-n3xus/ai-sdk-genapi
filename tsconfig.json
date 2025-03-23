@@ -1,0 +1,5 @@
+{
+  "extends": "./ts-library.json",
+  "include": ["."],
+  "exclude": ["*/dist", "dist", "build", "node_modules"]
+}
