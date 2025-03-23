@@ -164,7 +164,7 @@ The suffix that comes after a completion of inserted text.
      */
     suffix?: string;
     /**
-A unique identifier representing your end-user, which can help OpenAI to
+A unique identifier representing your end-user, which can help GenAPI to
 monitor and detect abuse. Learn more.
      */
     user?: string;
@@ -204,7 +204,7 @@ Only supported in text-embedding-3 and later models.
      */
     dimensions?: number;
     /**
-A unique identifier representing your end-user, which can help OpenAI to
+A unique identifier representing your end-user, which can help GenAPI to
 monitor and detect abuse. Learn more.
      */
     user?: string;
@@ -251,7 +251,7 @@ interface GenApiProviderSettings {
     /**
 Base URL for the API calls.
      */
-    baseURL: string;
+    baseURL?: string;
     /**
 Provider name.
      */
@@ -259,7 +259,7 @@ Provider name.
     /**
 API key for authenticating requests. If specified, adds an `Authorization`
 header to request headers with the value `Bearer <apiKey>`. This will be added
-before any headers potentially specified in the `headers` option.
+before any headers potentially specified in the `headers` option. Default is `process.env.GENAPI_API_KEY`
      */
     apiKey?: string;
     /**

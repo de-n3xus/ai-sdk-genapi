@@ -27,22 +27,22 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 
-// src/openai-compatible-chat-language-model.ts
+// src/genapi-chat-language-model.ts
 var import_provider3 = require("@ai-sdk/provider");
 var import_provider_utils2 = require("@ai-sdk/provider-utils");
 var import_zod2 = require("zod");
 
-// src/convert-to-openai-compatible-chat-messages.ts
+// src/convert-to-genapi-chat-messages.ts
 var import_provider = require("@ai-sdk/provider");
 var import_provider_utils = require("@ai-sdk/provider-utils");
-function getOpenAIMetadata(message) {
+function getGenAPIMetadata(message) {
   var _a, _b;
   return (_b = (_a = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a.genApi) != null ? _b : {};
 }
 function convertToGenApiChatMessages(prompt) {
   const messages = [];
   for (const { role, content, ...message } of prompt) {
-    const metadata = getOpenAIMetadata({ ...message });
+    const metadata = getGenAPIMetadata({ ...message });
     switch (role) {
       case "system": {
         messages.push({ role: "system", content, ...metadata });
@@ -53,7 +53,7 @@ function convertToGenApiChatMessages(prompt) {
           messages.push({
             role: "user",
             content: content[0].text,
-            ...getOpenAIMetadata(content[0])
+            ...getGenAPIMetadata(content[0])
           });
           break;
         }
@@ -61,7 +61,7 @@ function convertToGenApiChatMessages(prompt) {
           role: "user",
           content: content.map((part) => {
             var _a;
-            const partMetadata = getOpenAIMetadata(part);
+            const partMetadata = getGenAPIMetadata(part);
             switch (part.type) {
               case "text": {
                 return { type: "text", text: part.text, ...partMetadata };
@@ -90,7 +90,7 @@ function convertToGenApiChatMessages(prompt) {
         let text = "";
         const toolCalls = [];
         for (const part of content) {
-          const partMetadata = getOpenAIMetadata(part);
+          const partMetadata = getGenAPIMetadata(part);
           switch (part.type) {
             case "text": {
               text += part.text;
@@ -120,7 +120,7 @@ function convertToGenApiChatMessages(prompt) {
       }
       case "tool": {
         for (const toolResponse of content) {
-          const toolResponseMetadata = getOpenAIMetadata(toolResponse);
+          const toolResponseMetadata = getGenAPIMetadata(toolResponse);
           messages.push({
             role: "tool",
             tool_call_id: toolResponse.toolCallId,
@@ -152,7 +152,7 @@ function getResponseMetadata({
   };
 }
 
-// src/map-openai-compatible-finish-reason.ts
+// src/map-genapi-finish-reason.ts
 function mapGenApiFinishReason(finishReason) {
   switch (finishReason) {
     case "stop":
@@ -169,13 +169,13 @@ function mapGenApiFinishReason(finishReason) {
   }
 }
 
-// src/openai-compatible-error.ts
+// src/genapi-error.ts
 var import_zod = require("zod");
 var genApiErrorDataSchema = import_zod.z.object({
   error: import_zod.z.object({
     message: import_zod.z.string(),
     // The additional information below is handled loosely to support
-    // OpenAI-compatible providers that have slightly different error
+    // genapi providers that have slightly different error
     // responses:
     type: import_zod.z.string().nullish(),
     param: import_zod.z.any().nullish(),
@@ -187,7 +187,7 @@ var defaultGenApiErrorStructure = {
   errorToMessage: (data) => data.error.message
 };
 
-// src/openai-compatible-prepare-tools.ts
+// src/genapi-prepare-tools.ts
 var import_provider2 = require("@ai-sdk/provider");
 function prepareTools({
   mode,
@@ -200,12 +200,12 @@ function prepareTools({
     return { tools: void 0, tool_choice: void 0, toolWarnings };
   }
   const toolChoice = mode.toolChoice;
-  const openaiCompatTools = [];
+  const genapiCompatTools = [];
   for (const tool of tools) {
     if (tool.type === "provider-defined") {
       toolWarnings.push({ type: "unsupported-tool", tool });
     } else {
-      openaiCompatTools.push({
+      genapiCompatTools.push({
         type: "function",
         function: {
           name: tool.name,
@@ -216,17 +216,17 @@ function prepareTools({
     }
   }
   if (toolChoice == null) {
-    return { tools: openaiCompatTools, tool_choice: void 0, toolWarnings };
+    return { tools: genapiCompatTools, tool_choice: void 0, toolWarnings };
   }
   const type = toolChoice.type;
   switch (type) {
     case "auto":
     case "none":
     case "required":
-      return { tools: openaiCompatTools, tool_choice: type, toolWarnings };
+      return { tools: genapiCompatTools, tool_choice: type, toolWarnings };
     case "tool":
       return {
-        tools: openaiCompatTools,
+        tools: genapiCompatTools,
         tool_choice: {
           type: "function",
           function: {
@@ -244,7 +244,7 @@ function prepareTools({
   }
 }
 
-// src/openai-compatible-chat-language-model.ts
+// src/genapi-chat-language-model.ts
 var GenApiChatLanguageModel = class {
   // type inferred via constructor
   constructor(modelId, settings, config) {
@@ -734,12 +734,12 @@ var createGenApiChatChunkSchema = (errorSchema) => import_zod2.z.union([
   errorSchema
 ]);
 
-// src/openai-compatible-completion-language-model.ts
+// src/genapi-completion-language-model.ts
 var import_provider5 = require("@ai-sdk/provider");
 var import_provider_utils3 = require("@ai-sdk/provider-utils");
 var import_zod3 = require("zod");
 
-// src/convert-to-openai-compatible-completion-prompt.ts
+// src/convert-to-genapi-completion-prompt.ts
 var import_provider4 = require("@ai-sdk/provider");
 function convertToGenApiCompletionPrompt({
   prompt,
@@ -823,7 +823,7 @@ ${user}:`]
   };
 }
 
-// src/openai-compatible-completion-language-model.ts
+// src/genapi-completion-language-model.ts
 var GenApiCompletionLanguageModel = class {
   // type inferred via constructor
   constructor(modelId, settings, config) {
@@ -1085,7 +1085,7 @@ var createGenApiCompletionChunkSchema = (errorSchema) => import_zod3.z.union([
   errorSchema
 ]);
 
-// src/openai-compatible-embedding-model.ts
+// src/genapi-embedding-model.ts
 var import_provider6 = require("@ai-sdk/provider");
 var import_provider_utils4 = require("@ai-sdk/provider-utils");
 var import_zod4 = require("zod");
@@ -1138,7 +1138,7 @@ var GenApiEmbeddingModel = class {
         (_a = this.config.errorStructure) != null ? _a : defaultGenApiErrorStructure
       ),
       successfulResponseHandler: (0, import_provider_utils4.createJsonResponseHandler)(
-        openaiTextEmbeddingResponseSchema
+        genapiTextEmbeddingResponseSchema
       ),
       abortSignal,
       fetch: this.config.fetch
@@ -1150,18 +1150,18 @@ var GenApiEmbeddingModel = class {
     };
   }
 };
-var openaiTextEmbeddingResponseSchema = import_zod4.z.object({
+var genapiTextEmbeddingResponseSchema = import_zod4.z.object({
   data: import_zod4.z.array(import_zod4.z.object({ embedding: import_zod4.z.array(import_zod4.z.number()) })),
   usage: import_zod4.z.object({ prompt_tokens: import_zod4.z.number() }).nullish()
 });
 
-// src/openai-compatible-provider.ts
+// src/genapi-provider.ts
 var import_provider_utils5 = require("@ai-sdk/provider-utils");
 function createGenApi(options) {
-  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL);
+  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL || "https://api.gen-api.ru/api/v1/networks");
   const providerName = options.name;
   const getHeaders = () => ({
-    ...options.apiKey && { Authorization: `Bearer ${options.apiKey}` },
+    ...options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : { Authorization: `Bearer ${process.env.GENAPI_API_KEY}` },
     ...options.headers
   });
   const getCommonModelConfig = (modelType) => ({

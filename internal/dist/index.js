@@ -26,7 +26,7 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 
-// src/convert-to-openai-compatible-chat-messages.ts
+// src/convert-to-genapi-chat-messages.ts
 var import_provider = require("@ai-sdk/provider");
 var import_provider_utils = require("@ai-sdk/provider-utils");
 function getGenAPIMetadata(message) {
@@ -133,7 +133,7 @@ function convertToGenApiChatMessages(prompt) {
   return messages;
 }
 
-// src/map-openai-compatible-finish-reason.ts
+// src/map-genapi-finish-reason.ts
 function mapGenApiFinishReason(finishReason) {
   switch (finishReason) {
     case "stop":

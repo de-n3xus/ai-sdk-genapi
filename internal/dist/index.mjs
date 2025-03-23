@@ -1,4 +1,4 @@
-// src/convert-to-openai-compatible-chat-messages.ts
+// src/convert-to-genapi-chat-messages.ts
 import {
   UnsupportedFunctionalityError
 } from "@ai-sdk/provider";
@@ -107,7 +107,7 @@ function convertToGenApiChatMessages(prompt) {
   return messages;
 }
 
-// src/map-openai-compatible-finish-reason.ts
+// src/map-genapi-finish-reason.ts
 function mapGenApiFinishReason(finishReason) {
   switch (finishReason) {
     case "stop":
