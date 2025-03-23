@@ -1,6 +1,6 @@
 import { InvalidPromptError, LanguageModelV1Prompt, UnsupportedFunctionalityError } from '@ai-sdk/provider'
 
-export function convertToOpenAICompatibleCompletionPrompt ({
+export function convertToGenApiCompletionPrompt ({
 	                                                           prompt,
 	                                                           inputFormat,
 	                                                           user = 'user',

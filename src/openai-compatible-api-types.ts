@@ -1,12 +1,12 @@
 import { JSONValue } from '@ai-sdk/provider'
 
-export type OpenAICompatibleChatPrompt = Array<OpenAICompatibleMessage>;
+export type GenApiChatPrompt = Array<GenApiMessage>;
 
-export type OpenAICompatibleMessage =
-	| OpenAICompatibleSystemMessage
-	| OpenAICompatibleUserMessage
-	| OpenAICompatibleAssistantMessage
-	| OpenAICompatibleToolMessage;
+export type GenApiMessage =
+	| GenApiSystemMessage
+	| GenApiUserMessage
+	| GenApiAssistantMessage
+	| GenApiToolMessage;
 
 // Allow for arbitrary additional properties for general purpose
 // provider-metadata-specific extensibility.
@@ -15,39 +15,39 @@ type JsonRecord<T = never> = Record<
 	JSONValue | JSONValue[] | T | T[] | undefined
 >;
 
-export interface OpenAICompatibleSystemMessage extends JsonRecord {
+export interface GenApiSystemMessage extends JsonRecord {
 	role: 'system';
 	content: string;
 }
 
-export interface OpenAICompatibleUserMessage
-	extends JsonRecord<OpenAICompatibleContentPart> {
+export interface GenApiUserMessage
+	extends JsonRecord<GenApiContentPart> {
 	role: 'user';
-	content: string | Array<OpenAICompatibleContentPart>;
+	content: string | Array<GenApiContentPart>;
 }
 
-export type OpenAICompatibleContentPart =
-	| OpenAICompatibleContentPartText
-	| OpenAICompatibleContentPartImage;
+export type GenApiContentPart =
+	| GenApiContentPartText
+	| GenApiContentPartImage;
 
-export interface OpenAICompatibleContentPartImage extends JsonRecord {
+export interface GenApiContentPartImage extends JsonRecord {
 	type: 'image_url';
 	image_url: { url: string };
 }
 
-export interface OpenAICompatibleContentPartText extends JsonRecord {
+export interface GenApiContentPartText extends JsonRecord {
 	type: 'text';
 	text: string;
 }
 
-export interface OpenAICompatibleAssistantMessage
-	extends JsonRecord<OpenAICompatibleMessageToolCall> {
+export interface GenApiAssistantMessage
+	extends JsonRecord<GenApiMessageToolCall> {
 	role: 'assistant';
 	content?: string | null;
-	tool_calls?: Array<OpenAICompatibleMessageToolCall>;
+	tool_calls?: Array<GenApiMessageToolCall>;
 }
 
-export interface OpenAICompatibleMessageToolCall extends JsonRecord {
+export interface GenApiMessageToolCall extends JsonRecord {
 	type: 'function';
 	id: string;
 	function: {
@@ -56,7 +56,7 @@ export interface OpenAICompatibleMessageToolCall extends JsonRecord {
 	};
 }
 
-export interface OpenAICompatibleToolMessage extends JsonRecord {
+export interface GenApiToolMessage extends JsonRecord {
 	role: 'tool';
 	content: string;
 	tool_call_id: string;

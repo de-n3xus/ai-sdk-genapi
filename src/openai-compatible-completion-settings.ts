@@ -1,6 +1,6 @@
-export type OpenAICompatibleCompletionModelId = string;
+export type GenApiCompletionModelId = string;
 
-export interface OpenAICompatibleCompletionSettings {
+export interface GenApiCompletionSettings {
 	/**
 Echo back the prompt in addition to the completion.
 	 */

@@ -1,33 +1,33 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createGenApi } from './openai-compatible-provider'
-import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
-import { OpenAICompatibleCompletionLanguageModel } from './openai-compatible-completion-language-model'
-import { OpenAICompatibleEmbeddingModel } from './openai-compatible-embedding-model'
-import { OpenAICompatibleChatSettings } from './openai-compatible-chat-settings'
+import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
+import { GenApiCompletionLanguageModel } from './openai-compatible-completion-language-model'
+import { GenApiEmbeddingModel } from './openai-compatible-embedding-model'
+import { GenApiChatSettings } from './openai-compatible-chat-settings'
 
-const OpenAICompatibleChatLanguageModelMock = vi.mocked(
-	OpenAICompatibleChatLanguageModel,
+const GenApiChatLanguageModelMock = vi.mocked(
+	GenApiChatLanguageModel,
 )
-const OpenAICompatibleCompletionLanguageModelMock = vi.mocked(
-	OpenAICompatibleCompletionLanguageModel,
+const GenApiCompletionLanguageModelMock = vi.mocked(
+	GenApiCompletionLanguageModel,
 )
-const OpenAICompatibleEmbeddingModelMock = vi.mocked(
-	OpenAICompatibleEmbeddingModel,
+const GenApiEmbeddingModelMock = vi.mocked(
+	GenApiEmbeddingModel,
 )
 
 vi.mock('./openai-compatible-chat-language-model', () => ({
-	OpenAICompatibleChatLanguageModel: vi.fn(),
+	GenApiChatLanguageModel: vi.fn(),
 }))
 
 vi.mock('./openai-compatible-completion-language-model', () => ({
-	OpenAICompatibleCompletionLanguageModel: vi.fn(),
+	GenApiCompletionLanguageModel: vi.fn(),
 }))
 
 vi.mock('./openai-compatible-embedding-model', () => ({
-	OpenAICompatibleEmbeddingModel: vi.fn(),
+	GenApiEmbeddingModel: vi.fn(),
 }))
 
-describe('OpenAICompatibleProvider', () => {
+describe('GenApiProvider', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 	})
@@ -46,7 +46,7 @@ describe('OpenAICompatibleProvider', () => {
 			provider('model-id')
 
 			const constructorCall =
-				OpenAICompatibleChatLanguageModelMock.mock.calls[0]
+				GenApiChatLanguageModelMock.mock.calls[0]
 			const config = constructorCall[2]
 			const headers = config.headers()
 
@@ -71,7 +71,7 @@ describe('OpenAICompatibleProvider', () => {
 			provider('model-id')
 
 			const constructorCall =
-				OpenAICompatibleChatLanguageModelMock.mock.calls[0]
+				GenApiChatLanguageModelMock.mock.calls[0]
 			const config = constructorCall[2]
 			const headers = config.headers()
 
@@ -92,12 +92,12 @@ describe('OpenAICompatibleProvider', () => {
 
 		it('should create chat model with correct configuration', () => {
 			const provider = createGenApi(defaultOptions)
-			const settings: OpenAICompatibleChatSettings = {}
+			const settings: GenApiChatSettings = {}
 
 			provider.chatModel('chat-model', settings)
 
 			const constructorCall =
-				OpenAICompatibleChatLanguageModelMock.mock.calls[0]
+				GenApiChatLanguageModelMock.mock.calls[0]
 			const config = constructorCall[2]
 			const headers = config.headers()
 
@@ -113,12 +113,12 @@ describe('OpenAICompatibleProvider', () => {
 
 		it('should create completion model with correct configuration', () => {
 			const provider = createGenApi(defaultOptions)
-			const settings: OpenAICompatibleChatSettings = {}
+			const settings: GenApiChatSettings = {}
 
 			provider.completionModel('completion-model', settings)
 
 			const constructorCall =
-				OpenAICompatibleCompletionLanguageModelMock.mock.calls[0]
+				GenApiCompletionLanguageModelMock.mock.calls[0]
 			const config = constructorCall[2]
 			const headers = config.headers()
 
@@ -134,11 +134,11 @@ describe('OpenAICompatibleProvider', () => {
 
 		it('should create embedding model with correct configuration', () => {
 			const provider = createGenApi(defaultOptions)
-			const settings: OpenAICompatibleChatSettings = {}
+			const settings: GenApiChatSettings = {}
 
 			provider.textEmbeddingModel('embedding-model', settings)
 
-			const constructorCall = OpenAICompatibleEmbeddingModelMock.mock.calls[0]
+			const constructorCall = GenApiEmbeddingModelMock.mock.calls[0]
 			const config = constructorCall[2]
 			const headers = config.headers()
 
@@ -154,11 +154,11 @@ describe('OpenAICompatibleProvider', () => {
 
 		it('should use languageModel as default when called as function', () => {
 			const provider = createGenApi(defaultOptions)
-			const settings: OpenAICompatibleChatSettings = {}
+			const settings: GenApiChatSettings = {}
 
 			provider('model-id', settings)
 
-			expect(OpenAICompatibleChatLanguageModel).toHaveBeenCalledWith(
+			expect(GenApiChatLanguageModel).toHaveBeenCalledWith(
 				'model-id',
 				settings,
 				expect.objectContaining({
@@ -179,7 +179,7 @@ describe('OpenAICompatibleProvider', () => {
 			provider('model-id')
 
 			const constructorCall =
-				OpenAICompatibleChatLanguageModelMock.mock.calls[0]
+				GenApiChatLanguageModelMock.mock.calls[0]
 			const config = constructorCall[2]
 
 			expect(config.url({ modelId: 'model-id', path: '/v1/chat' })).toBe(

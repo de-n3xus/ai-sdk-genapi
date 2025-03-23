@@ -1,8 +1,8 @@
-import { convertToOpenAICompatibleChatMessages } from './convert-to-openai-compatible-chat-messages'
+import { convertToGenApiChatMessages } from './convert-to-openai-compatible-chat-messages'
 
 describe('user messages', () => {
 	it('should convert messages with only a text part to a string content', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [{ type: 'text', text: 'Hello' }],
@@ -13,7 +13,7 @@ describe('user messages', () => {
 	})
 
 	it('should convert messages with image parts', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -42,7 +42,7 @@ describe('user messages', () => {
 	})
 
 	it('should handle URL-based images', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -71,7 +71,7 @@ describe('user messages', () => {
 
 describe('tool calls', () => {
 	it('should stringify arguments to tool calls', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'assistant',
 				content: [
@@ -122,12 +122,12 @@ describe('tool calls', () => {
 
 describe('provider-specific metadata merging', () => {
 	it('should merge system message metadata', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'system',
 				content: 'You are a helpful assistant.',
 				providerMetadata: {
-					openaiCompatible: {
+					genApi: {
 						cacheControl: { type: 'ephemeral' },
 					},
 				},
@@ -144,7 +144,7 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should merge user message content metadata', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -152,7 +152,7 @@ describe('provider-specific metadata merging', () => {
 						type: 'text',
 						text: 'Hello',
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								cacheControl: { type: 'ephemeral' },
 							},
 						},
@@ -171,11 +171,11 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should prioritize content-level metadata when merging', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				providerMetadata: {
-					openaiCompatible: {
+					genApi: {
 						messageLevel: true,
 					},
 				},
@@ -184,7 +184,7 @@ describe('provider-specific metadata merging', () => {
 						type: 'text',
 						text: 'Hello',
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								contentLevel: true,
 							},
 						},
@@ -203,7 +203,7 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle tool calls with metadata', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'assistant',
 				content: [
@@ -213,7 +213,7 @@ describe('provider-specific metadata merging', () => {
 						toolName: 'calculator',
 						args: { x: 1, y: 2 },
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								cacheControl: { type: 'ephemeral' },
 							},
 						},
@@ -243,7 +243,7 @@ describe('provider-specific metadata merging', () => {
 
 	it('should handle image content with metadata', async () => {
 		const imageUrl = new URL('https://example.com/image.jpg')
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -252,7 +252,7 @@ describe('provider-specific metadata merging', () => {
 						image: imageUrl,
 						mimeType: 'image/jpeg',
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								cacheControl: { type: 'ephemeral' },
 							},
 						},
@@ -275,8 +275,8 @@ describe('provider-specific metadata merging', () => {
 		])
 	})
 
-	it('should omit non-openaiCompatible metadata', async () => {
-		const result = convertToOpenAICompatibleChatMessages([
+	it('should omit non-genApi metadata', async () => {
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'system',
 				content: 'Hello',
@@ -297,7 +297,7 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle a user message with multiple content parts (text + image)', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -305,7 +305,7 @@ describe('provider-specific metadata merging', () => {
 						type: 'text',
 						text: 'Hello from part 1',
 						providerMetadata: {
-							openaiCompatible: { sentiment: 'positive' },
+							genApi: { sentiment: 'positive' },
 							leftoverKey: { foo: 'some leftover data' },
 						},
 					},
@@ -314,12 +314,12 @@ describe('provider-specific metadata merging', () => {
 						image: new Uint8Array([0, 1, 2, 3]),
 						mimeType: 'image/png',
 						providerMetadata: {
-							openaiCompatible: { alt_text: 'A sample image' },
+							genApi: { alt_text: 'A sample image' },
 						},
 					},
 				],
 				providerMetadata: {
-					openaiCompatible: { priority: 'high' },
+					genApi: { priority: 'high' },
 				},
 			},
 		])
@@ -332,7 +332,7 @@ describe('provider-specific metadata merging', () => {
 					{
 						type: 'text',
 						text: 'Hello from part 1',
-						sentiment: 'positive', // hoisted from part-level openaiCompatible
+						sentiment: 'positive', // hoisted from part-level genApi
 					},
 					{
 						type: 'image_url',
@@ -347,7 +347,7 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle a user message with multiple text parts (flattening disabled)', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				content: [
@@ -370,7 +370,7 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle an assistant message with text plus multiple tool calls', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'assistant',
 				content: [
@@ -381,7 +381,7 @@ describe('provider-specific metadata merging', () => {
 						toolName: 'searchTool',
 						args: { query: 'Weather' },
 						providerMetadata: {
-							openaiCompatible: { function_call_reason: 'user request' },
+							genApi: { function_call_reason: 'user request' },
 						},
 					},
 					{ type: 'text', text: 'Almost there...' },
@@ -423,12 +423,12 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle a single tool role message with multiple tool-result parts', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'tool',
 				providerMetadata: {
 					// this just gets omitted as we prioritize content-level metadata
-					openaiCompatible: { responseTier: 'detailed' },
+					genApi: { responseTier: 'detailed' },
 				},
 				content: [
 					{
@@ -442,7 +442,7 @@ describe('provider-specific metadata merging', () => {
 						toolCallId: 'call123',
 						toolName: 'calculator',
 						providerMetadata: {
-							openaiCompatible: { partial: true },
+							genApi: { partial: true },
 						},
 						result: { stepTwo: 'data chunk 2' },
 					},
@@ -466,11 +466,11 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle multiple content parts with multiple metadata layers', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'user',
 				providerMetadata: {
-					openaiCompatible: { messageLevel: 'global-metadata' },
+					genApi: { messageLevel: 'global-metadata' },
 					leftoverForMessage: { x: 123 },
 				},
 				content: [
@@ -478,7 +478,7 @@ describe('provider-specific metadata merging', () => {
 						type: 'text',
 						text: 'Part A',
 						providerMetadata: {
-							openaiCompatible: { textPartLevel: 'localized' },
+							genApi: { textPartLevel: 'localized' },
 							leftoverForText: { info: 'text leftover' },
 						},
 					},
@@ -487,7 +487,7 @@ describe('provider-specific metadata merging', () => {
 						image: new Uint8Array([9, 8, 7, 6]),
 						mimeType: 'image/png',
 						providerMetadata: {
-							openaiCompatible: { imagePartLevel: 'image-data' },
+							genApi: { imagePartLevel: 'image-data' },
 						},
 					},
 				],
@@ -517,11 +517,11 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle different tool metadata vs. message-level metadata', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'assistant',
 				providerMetadata: {
-					openaiCompatible: { globalPriority: 'high' },
+					genApi: { globalPriority: 'high' },
 				},
 				content: [
 					{ type: 'text', text: 'Initiating tool calls...' },
@@ -531,7 +531,7 @@ describe('provider-specific metadata merging', () => {
 						toolName: 'awesomeTool',
 						args: { param: 'someValue' },
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								toolPriority: 'critical',
 							},
 						},
@@ -561,11 +561,11 @@ describe('provider-specific metadata merging', () => {
 	})
 
 	it('should handle metadata collisions and overwrites in tool calls', () => {
-		const result = convertToOpenAICompatibleChatMessages([
+		const result = convertToGenApiChatMessages([
 			{
 				role: 'assistant',
 				providerMetadata: {
-					openaiCompatible: {
+					genApi: {
 						cacheControl: { type: 'default' },
 						sharedKey: 'assistantLevel',
 					},
@@ -577,7 +577,7 @@ describe('provider-specific metadata merging', () => {
 						toolName: 'collider',
 						args: { num: 42 },
 						providerMetadata: {
-							openaiCompatible: {
+							genApi: {
 								cacheControl: { type: 'ephemeral' }, // overwrites top-level
 								sharedKey: 'toolLevel',
 							},

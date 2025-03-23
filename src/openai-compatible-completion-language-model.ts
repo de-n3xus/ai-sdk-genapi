@@ -17,16 +17,16 @@ import {
 	ResponseHandler,
 } from '@ai-sdk/provider-utils'
 import { z } from 'zod'
-import { convertToOpenAICompatibleCompletionPrompt } from './convert-to-openai-compatible-completion-prompt'
+import { convertToGenApiCompletionPrompt } from './convert-to-openai-compatible-completion-prompt'
 import { getResponseMetadata } from './get-response-metadata'
-import { mapOpenAICompatibleFinishReason } from './map-openai-compatible-finish-reason'
+import { mapGenApiFinishReason } from './map-openai-compatible-finish-reason'
 import {
-	OpenAICompatibleCompletionModelId,
-	OpenAICompatibleCompletionSettings,
+	GenApiCompletionModelId,
+	GenApiCompletionSettings,
 } from './openai-compatible-completion-settings'
-import { defaultOpenAICompatibleErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
+import { defaultGenApiErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
 
-type OpenAICompatibleCompletionConfig = {
+type GenApiCompletionConfig = {
 	provider: string;
 	headers: () => Record<string, string | undefined>;
 	url: (options: { modelId: string; path: string }) => string;
@@ -34,22 +34,22 @@ type OpenAICompatibleCompletionConfig = {
 	errorStructure?: ProviderErrorStructure<any>;
 };
 
-export class OpenAICompatibleCompletionLanguageModel
+export class GenApiCompletionLanguageModel
 	implements LanguageModelV1 {
 	readonly specificationVersion = 'v1'
 	readonly defaultObjectGenerationMode = undefined
 
-	readonly modelId: OpenAICompatibleCompletionModelId
-	readonly settings: OpenAICompatibleCompletionSettings
+	readonly modelId: GenApiCompletionModelId
+	readonly settings: GenApiCompletionSettings
 
-	private readonly config: OpenAICompatibleCompletionConfig
+	private readonly config: GenApiCompletionConfig
 	private readonly failedResponseHandler: ResponseHandler<APICallError>
 	private readonly chunkSchema // type inferred via constructor
 
 	constructor (
-		modelId: OpenAICompatibleCompletionModelId,
-		settings: OpenAICompatibleCompletionSettings,
-		config: OpenAICompatibleCompletionConfig,
+		modelId: GenApiCompletionModelId,
+		settings: GenApiCompletionSettings,
+		config: GenApiCompletionConfig,
 	) {
 		this.modelId = modelId
 		this.settings = settings
@@ -57,7 +57,7 @@ export class OpenAICompatibleCompletionLanguageModel
 
 		// initialize error handling:
 		const errorStructure =
-			config.errorStructure ?? defaultOpenAICompatibleErrorStructure
+			config.errorStructure ?? defaultGenApiErrorStructure
 		this.chunkSchema = createGenApiCompletionChunkSchema(
 			errorStructure.errorSchema,
 		)
@@ -90,7 +90,7 @@ export class OpenAICompatibleCompletionLanguageModel
 			body: args,
 			failedResponseHandler: this.failedResponseHandler,
 			successfulResponseHandler: createJsonResponseHandler(
-				openaiCompatibleCompletionResponseSchema,
+				genApiCompletionResponseSchema,
 			),
 			abortSignal: options.abortSignal,
 			fetch: this.config.fetch,
@@ -105,7 +105,7 @@ export class OpenAICompatibleCompletionLanguageModel
 				promptTokens: response.usage?.prompt_tokens ?? NaN,
 				completionTokens: response.usage?.completion_tokens ?? NaN,
 			},
-			finishReason: mapOpenAICompatibleFinishReason(choice.finish_reason),
+			finishReason: mapGenApiFinishReason(choice.finish_reason),
 			rawCall: { rawPrompt, rawSettings },
 			rawResponse: { headers: responseHeaders, body: rawResponse },
 			response: getResponseMetadata(response),
@@ -190,7 +190,7 @@ export class OpenAICompatibleCompletionLanguageModel
 						const choice = value.choices[0]
 
 						if (choice?.finish_reason != null) {
-							finishReason = mapOpenAICompatibleFinishReason(
+							finishReason = mapGenApiFinishReason(
 								choice.finish_reason,
 							)
 						}
@@ -254,7 +254,7 @@ export class OpenAICompatibleCompletionLanguageModel
 		}
 
 		const { prompt: completionPrompt, stopSequences } =
-			convertToOpenAICompatibleCompletionPrompt({ prompt, inputFormat })
+			convertToGenApiCompletionPrompt({ prompt, inputFormat })
 
 		const stop = [...(stopSequences ?? []), ...(userStopSequences ?? [])]
 
@@ -323,7 +323,7 @@ export class OpenAICompatibleCompletionLanguageModel
 
 // limited version of the schema, focussed on what is needed for the implementation
 // this approach limits breakages when the API changes and increases efficiency
-const openaiCompatibleCompletionResponseSchema = z.object({
+const genApiCompletionResponseSchema = z.object({
 	id: z.string().nullish(),
 	created: z.number().nullish(),
 	model: z.string().nullish(),

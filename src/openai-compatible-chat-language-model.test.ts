@@ -6,7 +6,7 @@ import {
 	StreamingTestServer,
 } from '@ai-sdk/provider-utils/test'
 import { createGenApi } from './openai-compatible-provider'
-import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
+import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
 
 const TEST_PROMPT: LanguageModelV1Prompt = [
 	{ role: 'user', content: [{ type: 'text', text: 'Hello' }] },
@@ -24,7 +24,7 @@ const model = provider('grok-beta')
 
 describe('config', () => {
 	it('should extract base name from provider string', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
@@ -38,7 +38,7 @@ describe('config', () => {
 	})
 
 	it('should handle provider without dot notation', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
@@ -52,7 +52,7 @@ describe('config', () => {
 	})
 
 	it('should return empty for empty provider', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
@@ -498,7 +498,7 @@ describe('doGenerate', () => {
 		it('should not send a response_format when response format is text', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -544,7 +544,7 @@ describe('doGenerate', () => {
 		it('should forward json response format as "json_object" and omit schema when structuredOutputs are disabled', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -590,7 +590,7 @@ describe('doGenerate', () => {
 		it('should forward json response format as "json_object" and include schema when structuredOutputs are enabled', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -641,7 +641,7 @@ describe('doGenerate', () => {
 		it('should use json_schema & strict in object-json mode when structuredOutputs are enabled', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -689,7 +689,7 @@ describe('doGenerate', () => {
 		it('should set name & description in object-json mode when structuredOutputs are enabled', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -740,7 +740,7 @@ describe('doGenerate', () => {
 		it('should allow for undefined schema in object-json mode when structuredOutputs are enabled', async () => {
 			prepareJsonResponse({ content: '{"value":"Spark"}' })
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -784,7 +784,7 @@ describe('doGenerate', () => {
 				],
 			})
 
-			const model = new OpenAICompatibleChatLanguageModel(
+			const model = new GenApiChatLanguageModel(
 				'gpt-4o-2024-08-06',
 				{},
 				{
@@ -1875,7 +1875,7 @@ describe('metadata extraction', () => {
 			},
 			({ call }) => {
 				it('should process metadata from complete response', async () => {
-					const model = new OpenAICompatibleChatLanguageModel(
+					const model = new GenApiChatLanguageModel(
 						'gpt-4',
 						{},
 						{
@@ -1922,7 +1922,7 @@ describe('metadata extraction', () => {
 			},
 			({ call }) => {
 				it('should process metadata from streaming response', async () => {
-					const model = new OpenAICompatibleChatLanguageModel(
+					const model = new GenApiChatLanguageModel(
 						'gpt-4',
 						{},
 						{

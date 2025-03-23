@@ -4,18 +4,18 @@ import {
 	UnsupportedFunctionalityError,
 } from '@ai-sdk/provider'
 import { convertUint8ArrayToBase64 } from '@ai-sdk/provider-utils'
-import { OpenAICompatibleChatPrompt } from './openai-compatible-api-types'
+import { GenApiChatPrompt } from './openai-compatible-api-types'
 
 function getOpenAIMetadata (message: {
 	providerMetadata?: LanguageModelV1ProviderMetadata;
 }) {
-	return message?.providerMetadata?.openaiCompatible ?? {}
+	return message?.providerMetadata?.genApi ?? {}
 }
 
-export function convertToOpenAICompatibleChatMessages (
+export function convertToGenApiChatMessages (
 	prompt: LanguageModelV1Prompt,
-): OpenAICompatibleChatPrompt {
-	const messages: OpenAICompatibleChatPrompt = []
+): GenApiChatPrompt {
+	const messages: GenApiChatPrompt = []
 	for (const { role, content, ...message } of prompt) {
 		const metadata = getOpenAIMetadata({ ...message })
 		switch (role) {

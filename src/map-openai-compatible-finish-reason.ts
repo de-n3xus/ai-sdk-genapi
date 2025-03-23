@@ -1,6 +1,6 @@
 import { LanguageModelV1FinishReason } from '@ai-sdk/provider'
 
-export function mapOpenAICompatibleFinishReason (
+export function mapGenApiFinishReason (
 	finishReason: string | null | undefined,
 ): LanguageModelV1FinishReason {
 	switch (finishReason) {

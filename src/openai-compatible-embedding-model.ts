@@ -8,12 +8,12 @@ import {
 } from '@ai-sdk/provider-utils'
 import { z } from 'zod'
 import {
-	OpenAICompatibleEmbeddingModelId,
-	OpenAICompatibleEmbeddingSettings,
+	GenApiEmbeddingModelId,
+	GenApiEmbeddingSettings,
 } from './openai-compatible-embedding-settings'
-import { defaultOpenAICompatibleErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
+import { defaultGenApiErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
 
-type OpenAICompatibleEmbeddingConfig = {
+type GenApiEmbeddingConfig = {
 	/**
 Override the maximum number of embeddings per call.
 	 */
@@ -31,18 +31,18 @@ Override the parallelism of embedding calls.
 	errorStructure?: ProviderErrorStructure<any>;
 };
 
-export class OpenAICompatibleEmbeddingModel
+export class GenApiEmbeddingModel
 	implements EmbeddingModelV1<string> {
 	readonly specificationVersion = 'v1'
-	readonly modelId: OpenAICompatibleEmbeddingModelId
+	readonly modelId: GenApiEmbeddingModelId
 
-	private readonly config: OpenAICompatibleEmbeddingConfig
-	private readonly settings: OpenAICompatibleEmbeddingSettings
+	private readonly config: GenApiEmbeddingConfig
+	private readonly settings: GenApiEmbeddingSettings
 
 	constructor (
-		modelId: OpenAICompatibleEmbeddingModelId,
-		settings: OpenAICompatibleEmbeddingSettings,
-		config: OpenAICompatibleEmbeddingConfig,
+		modelId: GenApiEmbeddingModelId,
+		settings: GenApiEmbeddingSettings,
+		config: GenApiEmbeddingConfig,
 	) {
 		this.modelId = modelId
 		this.settings = settings
@@ -91,7 +91,7 @@ export class OpenAICompatibleEmbeddingModel
 				user: this.settings.user,
 			},
 			failedResponseHandler: createJsonErrorResponseHandler(
-				this.config.errorStructure ?? defaultOpenAICompatibleErrorStructure,
+				this.config.errorStructure ?? defaultGenApiErrorStructure,
 			),
 			successfulResponseHandler: createJsonResponseHandler(
 				openaiTextEmbeddingResponseSchema,

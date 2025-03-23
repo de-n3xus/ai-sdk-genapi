@@ -1,6 +1,6 @@
-export type OpenAICompatibleChatModelId = string;
+export type GenApiChatModelId = string;
 
-export interface OpenAICompatibleChatSettings {
+export interface GenApiChatSettings {
 	/**
 A unique identifier representing your end-user, which can help the provider to
 monitor and detect abuse.

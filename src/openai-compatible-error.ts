@@ -1,6 +1,6 @@
 import { z, ZodSchema } from 'zod'
 
-export const openaiCompatibleErrorDataSchema = z.object({
+export const genApiErrorDataSchema = z.object({
 	error: z.object({
 		message: z.string(),
 
@@ -13,8 +13,8 @@ export const openaiCompatibleErrorDataSchema = z.object({
 	}),
 })
 
-export type OpenAICompatibleErrorData = z.infer<
-	typeof openaiCompatibleErrorDataSchema
+export type GenApiErrorData = z.infer<
+	typeof genApiErrorDataSchema
 >;
 
 export type ProviderErrorStructure<T> = {
@@ -23,8 +23,8 @@ export type ProviderErrorStructure<T> = {
 	isRetryable?: (response: Response, error?: T) => boolean;
 };
 
-export const defaultOpenAICompatibleErrorStructure: ProviderErrorStructure<OpenAICompatibleErrorData> =
+export const defaultGenApiErrorStructure: ProviderErrorStructure<GenApiErrorData> =
 	{
-		errorSchema: openaiCompatibleErrorDataSchema,
+		errorSchema: genApiErrorDataSchema,
 		errorToMessage: data => data.error.message,
 	}

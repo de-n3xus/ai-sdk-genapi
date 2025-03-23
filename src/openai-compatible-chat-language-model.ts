@@ -20,15 +20,15 @@ import {
 	ResponseHandler,
 } from '@ai-sdk/provider-utils'
 import { z } from 'zod'
-import { convertToOpenAICompatibleChatMessages } from './convert-to-openai-compatible-chat-messages'
+import { convertToGenApiChatMessages } from './convert-to-openai-compatible-chat-messages'
 import { getResponseMetadata } from './get-response-metadata'
-import { mapOpenAICompatibleFinishReason } from './map-openai-compatible-finish-reason'
-import { OpenAICompatibleChatModelId, OpenAICompatibleChatSettings } from './openai-compatible-chat-settings'
-import { defaultOpenAICompatibleErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
+import { mapGenApiFinishReason } from './map-openai-compatible-finish-reason'
+import { GenApiChatModelId, GenApiChatSettings } from './openai-compatible-chat-settings'
+import { defaultGenApiErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
 import { prepareTools } from './openai-compatible-prepare-tools'
 import { MetadataExtractor } from './openai-compatible-metadata-extractor'
 
-export type OpenAICompatibleChatConfig = {
+export type GenApiChatConfig = {
 	provider: string;
 	headers: () => Record<string, string | undefined>;
 	url: (options: { modelId: string; path: string }) => string;
@@ -49,22 +49,22 @@ model. `undefined` can be specified if object generation is not supported.
 	supportsStructuredOutputs?: boolean;
 };
 
-export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
+export class GenApiChatLanguageModel implements LanguageModelV1 {
 	readonly specificationVersion = 'v1'
 
 	readonly supportsStructuredOutputs: boolean
 
-	readonly modelId: OpenAICompatibleChatModelId
-	readonly settings: OpenAICompatibleChatSettings
+	readonly modelId: GenApiChatModelId
+	readonly settings: GenApiChatSettings
 
-	private readonly config: OpenAICompatibleChatConfig
+	private readonly config: GenApiChatConfig
 	private readonly failedResponseHandler: ResponseHandler<APICallError>
 	private readonly chunkSchema // type inferred via constructor
 
 	constructor (
-		modelId: OpenAICompatibleChatModelId,
-		settings: OpenAICompatibleChatSettings,
-		config: OpenAICompatibleChatConfig,
+		modelId: GenApiChatModelId,
+		settings: GenApiChatSettings,
+		config: GenApiChatConfig,
 	) {
 		this.modelId = modelId
 		this.settings = settings
@@ -72,7 +72,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 
 		// initialize error handling:
 		const errorStructure =
-			config.errorStructure ?? defaultOpenAICompatibleErrorStructure
+			config.errorStructure ?? defaultGenApiErrorStructure
 		this.chunkSchema = createGenApiChatChunkSchema(
 			errorStructure.errorSchema,
 		)
@@ -113,7 +113,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 			body: args,
 			failedResponseHandler: this.failedResponseHandler,
 			successfulResponseHandler: createJsonResponseHandler(
-				OpenAICompatibleChatResponseSchema,
+				GenApiChatResponseSchema,
 			),
 			abortSignal: options.abortSignal,
 			fetch: this.config.fetch,
@@ -134,7 +134,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 				toolName: toolCall.function.name,
 				args: toolCall.function.arguments!,
 			})),
-			finishReason: mapOpenAICompatibleFinishReason(choice.finish_reason),
+			finishReason: mapGenApiFinishReason(choice.finish_reason),
 			usage: {
 				promptTokens: responseBody.usage?.prompt_tokens ?? NaN,
 				completionTokens: responseBody.usage?.completion_tokens ?? NaN,
@@ -213,7 +213,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 
 		const { responseHeaders, value: response } = await postJsonToApi({
 			url: this.config.url({
-				path: '',
+				path: `/${this.modelId}`,
 				modelId: this.modelId,
 			}),
 			headers: combineHeaders(this.config.headers(), options.headers),
@@ -295,7 +295,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 						const choice = value.choices[0]
 
 						if (choice?.finish_reason != null) {
-							finishReason = mapOpenAICompatibleFinishReason(
+							finishReason = mapGenApiFinishReason(
 								choice.finish_reason,
 							)
 						}
@@ -523,7 +523,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 			...providerMetadata?.[this.providerOptionsName],
 
 			// messages:
-			messages: convertToOpenAICompatibleChatMessages(prompt),
+			messages: convertToGenApiChatMessages(prompt),
 		}
 
 		switch (type) {
@@ -592,7 +592,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 
 // limited version of the schema, focussed on what is needed for the implementation
 // this approach limits breakages when the API changes and increases efficiency
-const OpenAICompatibleChatResponseSchema = z.object({
+const GenApiChatResponseSchema = z.object({
 	id: z.string().nullish(),
 	created: z.number().nullish(),
 	model: z.string().nullish(),

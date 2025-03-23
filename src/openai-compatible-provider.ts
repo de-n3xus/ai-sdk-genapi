@@ -1,44 +1,44 @@
 import { EmbeddingModelV1, LanguageModelV1, ProviderV1 } from '@ai-sdk/provider'
 import { FetchFunction, withoutTrailingSlash } from '@ai-sdk/provider-utils'
-import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
-import { OpenAICompatibleChatSettings } from './openai-compatible-chat-settings'
-import { OpenAICompatibleCompletionLanguageModel } from './openai-compatible-completion-language-model'
-import { OpenAICompatibleCompletionSettings } from './openai-compatible-completion-settings'
-import { OpenAICompatibleEmbeddingModel } from './openai-compatible-embedding-model'
-import { OpenAICompatibleEmbeddingSettings } from './openai-compatible-embedding-settings'
+import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
+import { GenApiChatSettings } from './openai-compatible-chat-settings'
+import { GenApiCompletionLanguageModel } from './openai-compatible-completion-language-model'
+import { GenApiCompletionSettings } from './openai-compatible-completion-settings'
+import { GenApiEmbeddingModel } from './openai-compatible-embedding-model'
+import { GenApiEmbeddingSettings } from './openai-compatible-embedding-settings'
 
-export interface OpenAICompatibleProvider<
+export interface GenApiProvider<
 	CHAT_MODEL_IDS extends string = string,
 	COMPLETION_MODEL_IDS extends string = string,
 	EMBEDDING_MODEL_IDS extends string = string,
 > extends ProviderV1 {
 	(
 		modelId: CHAT_MODEL_IDS,
-		settings?: OpenAICompatibleChatSettings,
+		settings?: GenApiChatSettings,
 	): LanguageModelV1;
 
 	languageModel (
 		modelId: CHAT_MODEL_IDS,
-		settings?: OpenAICompatibleChatSettings,
+		settings?: GenApiChatSettings,
 	): LanguageModelV1;
 
 	chatModel (
 		modelId: CHAT_MODEL_IDS,
-		settings?: OpenAICompatibleChatSettings,
+		settings?: GenApiChatSettings,
 	): LanguageModelV1;
 
 	completionModel (
 		modelId: COMPLETION_MODEL_IDS,
-		settings?: OpenAICompatibleCompletionSettings,
+		settings?: GenApiCompletionSettings,
 	): LanguageModelV1;
 
 	textEmbeddingModel (
 		modelId: EMBEDDING_MODEL_IDS,
-		settings?: OpenAICompatibleEmbeddingSettings,
+		settings?: GenApiEmbeddingSettings,
 	): EmbeddingModelV1<string>;
 }
 
-export interface OpenAICompatibleProviderSettings {
+export interface GenApiProviderSettings {
 	/**
 Base URL for the API calls.
 	 */
@@ -75,15 +75,15 @@ or to provide a custom fetch implementation for e.g. testing.
 }
 
 /**
-Create an OpenAICompatible provider instance.
+Create an GenApi provider instance.
  */
 export function createGenApi<
 	CHAT_MODEL_IDS extends string,
 	COMPLETION_MODEL_IDS extends string,
 	EMBEDDING_MODEL_IDS extends string,
 > (
-	options: OpenAICompatibleProviderSettings,
-): OpenAICompatibleProvider<
+	options: GenApiProviderSettings,
+): GenApiProvider<
 	CHAT_MODEL_IDS,
 	COMPLETION_MODEL_IDS,
 	EMBEDDING_MODEL_IDS
@@ -118,23 +118,23 @@ export function createGenApi<
 
 	const createLanguageModel = (
 		modelId: CHAT_MODEL_IDS,
-		settings: OpenAICompatibleChatSettings = {},
+		settings: GenApiChatSettings = {},
 	) => createChatModel(modelId, settings)
 
 	const createChatModel = (
 		modelId: CHAT_MODEL_IDS,
-		settings: OpenAICompatibleChatSettings = {},
+		settings: GenApiChatSettings = {},
 	) =>
-		new OpenAICompatibleChatLanguageModel(modelId, settings, {
+		new GenApiChatLanguageModel(modelId, settings, {
 			...getCommonModelConfig('chat'),
 			defaultObjectGenerationMode: 'tool',
 		})
 
 	const createCompletionModel = (
 		modelId: COMPLETION_MODEL_IDS,
-		settings: OpenAICompatibleCompletionSettings = {},
+		settings: GenApiCompletionSettings = {},
 	) =>
-		new OpenAICompatibleCompletionLanguageModel(
+		new GenApiCompletionLanguageModel(
 			modelId,
 			settings,
 			getCommonModelConfig('completion'),
@@ -142,9 +142,9 @@ export function createGenApi<
 
 	const createEmbeddingModel = (
 		modelId: EMBEDDING_MODEL_IDS,
-		settings: OpenAICompatibleEmbeddingSettings = {},
+		settings: GenApiEmbeddingSettings = {},
 	) =>
-		new OpenAICompatibleEmbeddingModel(
+		new GenApiEmbeddingModel(
 			modelId,
 			settings,
 			getCommonModelConfig('embedding'),
@@ -152,7 +152,7 @@ export function createGenApi<
 
 	const provider = (
 		modelId: CHAT_MODEL_IDS,
-		settings?: OpenAICompatibleChatSettings,
+		settings?: GenApiChatSettings,
 	) => createLanguageModel(modelId, settings)
 
 	provider.languageModel = createLanguageModel
@@ -160,7 +160,7 @@ export function createGenApi<
 	provider.completionModel = createCompletionModel
 	provider.textEmbeddingModel = createEmbeddingModel
 
-	return provider as OpenAICompatibleProvider<
+	return provider as GenApiProvider<
 		CHAT_MODEL_IDS,
 		COMPLETION_MODEL_IDS,
 		EMBEDDING_MODEL_IDS

@@ -1,7 +1,7 @@
 import { LanguageModelV1Prompt } from '@ai-sdk/provider'
 import { convertReadableStreamToArray, JsonTestServer, StreamingTestServer } from '@ai-sdk/provider-utils/test'
 import { createGenApi } from './openai-compatible-provider'
-import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
+import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
 
 const TEST_PROMPT: LanguageModelV1Prompt = [
 	{ role: 'user', content: [{ type: 'text', text: 'Hello' }] },
@@ -19,7 +19,7 @@ const model = provider.completionModel('gpt-3.5-turbo-instruct')
 
 describe('config', () => {
 	it('should extract base name from provider string', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
@@ -33,7 +33,7 @@ describe('config', () => {
 	})
 
 	it('should handle provider without dot notation', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
@@ -47,7 +47,7 @@ describe('config', () => {
 	})
 
 	it('should return empty for empty provider', () => {
-		const model = new OpenAICompatibleChatLanguageModel(
+		const model = new GenApiChatLanguageModel(
 			'gpt-4',
 			{},
 			{
