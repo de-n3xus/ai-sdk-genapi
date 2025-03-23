@@ -73,7 +73,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 		// initialize error handling:
 		const errorStructure =
 			config.errorStructure ?? defaultOpenAICompatibleErrorStructure
-		this.chunkSchema = createOpenAICompatibleChatChunkSchema(
+		this.chunkSchema = createGenApiChatChunkSchema(
 			errorStructure.errorSchema,
 		)
 		this.failedResponseHandler = createJsonErrorResponseHandler(errorStructure)
@@ -628,7 +628,7 @@ const OpenAICompatibleChatResponseSchema = z.object({
 
 // limited version of the schema, focussed on what is needed for the implementation
 // this approach limits breakages when the API changes and increases efficiency
-const createOpenAICompatibleChatChunkSchema = <ERROR_SCHEMA extends z.ZodType> (
+const createGenApiChatChunkSchema = <ERROR_SCHEMA extends z.ZodType> (
 	errorSchema: ERROR_SCHEMA,
 ) =>
 	z.union([

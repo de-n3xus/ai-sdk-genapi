@@ -9,7 +9,7 @@ export type {
 	ProviderErrorStructure,
 } from './openai-compatible-error'
 export type { MetadataExtractor } from './openai-compatible-metadata-extractor'
-export { createOpenAICompatible } from './openai-compatible-provider'
+export { createGenApi } from './openai-compatible-provider'
 export type {
 	OpenAICompatibleProvider,
 	OpenAICompatibleProviderSettings,

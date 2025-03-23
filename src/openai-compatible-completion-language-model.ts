@@ -58,7 +58,7 @@ export class OpenAICompatibleCompletionLanguageModel
 		// initialize error handling:
 		const errorStructure =
 			config.errorStructure ?? defaultOpenAICompatibleErrorStructure
-		this.chunkSchema = createOpenAICompatibleCompletionChunkSchema(
+		this.chunkSchema = createGenApiCompletionChunkSchema(
 			errorStructure.errorSchema,
 		)
 		this.failedResponseHandler = createJsonErrorResponseHandler(errorStructure)
@@ -343,7 +343,7 @@ const openaiCompatibleCompletionResponseSchema = z.object({
 
 // limited version of the schema, focussed on what is needed for the implementation
 // this approach limits breakages when the API changes and increases efficiency
-const createOpenAICompatibleCompletionChunkSchema = <
+const createGenApiCompletionChunkSchema = <
 	ERROR_SCHEMA extends z.ZodType,
 > (
 	errorSchema: ERROR_SCHEMA,

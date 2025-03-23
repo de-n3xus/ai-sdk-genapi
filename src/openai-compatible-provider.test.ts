@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createOpenAICompatible } from './openai-compatible-provider'
+import { createGenApi } from './openai-compatible-provider'
 import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
 import { OpenAICompatibleCompletionLanguageModel } from './openai-compatible-completion-language-model'
 import { OpenAICompatibleEmbeddingModel } from './openai-compatible-embedding-model'
@@ -32,7 +32,7 @@ describe('OpenAICompatibleProvider', () => {
 		vi.clearAllMocks()
 	})
 
-	describe('createOpenAICompatible', () => {
+	describe('createGenApi', () => {
 		it('should create provider with correct configuration', () => {
 			const options = {
 				baseURL: 'https://api.example.com',
@@ -42,7 +42,7 @@ describe('OpenAICompatibleProvider', () => {
 				queryParams: { 'Custom-Param': 'value' },
 			}
 
-			const provider = createOpenAICompatible(options)
+			const provider = createGenApi(options)
 			provider('model-id')
 
 			const constructorCall =
@@ -67,7 +67,7 @@ describe('OpenAICompatibleProvider', () => {
 				headers: { 'Custom-Header': 'value' },
 			}
 
-			const provider = createOpenAICompatible(options)
+			const provider = createGenApi(options)
 			provider('model-id')
 
 			const constructorCall =
@@ -91,7 +91,7 @@ describe('OpenAICompatibleProvider', () => {
 		}
 
 		it('should create chat model with correct configuration', () => {
-			const provider = createOpenAICompatible(defaultOptions)
+			const provider = createGenApi(defaultOptions)
 			const settings: OpenAICompatibleChatSettings = {}
 
 			provider.chatModel('chat-model', settings)
@@ -112,7 +112,7 @@ describe('OpenAICompatibleProvider', () => {
 		})
 
 		it('should create completion model with correct configuration', () => {
-			const provider = createOpenAICompatible(defaultOptions)
+			const provider = createGenApi(defaultOptions)
 			const settings: OpenAICompatibleChatSettings = {}
 
 			provider.completionModel('completion-model', settings)
@@ -133,7 +133,7 @@ describe('OpenAICompatibleProvider', () => {
 		})
 
 		it('should create embedding model with correct configuration', () => {
-			const provider = createOpenAICompatible(defaultOptions)
+			const provider = createGenApi(defaultOptions)
 			const settings: OpenAICompatibleChatSettings = {}
 
 			provider.textEmbeddingModel('embedding-model', settings)
@@ -153,7 +153,7 @@ describe('OpenAICompatibleProvider', () => {
 		})
 
 		it('should use languageModel as default when called as function', () => {
-			const provider = createOpenAICompatible(defaultOptions)
+			const provider = createGenApi(defaultOptions)
 			const settings: OpenAICompatibleChatSettings = {}
 
 			provider('model-id', settings)
@@ -175,7 +175,7 @@ describe('OpenAICompatibleProvider', () => {
 				apiKey: 'test-api-key',
 			}
 
-			const provider = createOpenAICompatible(options)
+			const provider = createGenApi(options)
 			provider('model-id')
 
 			const constructorCall =

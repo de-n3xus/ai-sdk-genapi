@@ -1,6 +1,6 @@
 import { EmbeddingModelV1Embedding } from '@ai-sdk/provider'
 import { JsonTestServer } from '@ai-sdk/provider-utils/test'
-import { createOpenAICompatible } from './openai-compatible-provider'
+import { createGenApi } from './openai-compatible-provider'
 
 const dummyEmbeddings = [
 	[0.1, 0.2, 0.3, 0.4, 0.5],
@@ -8,7 +8,7 @@ const dummyEmbeddings = [
 ]
 const testValues = ['sunny day at the beach', 'rainy day in the city']
 
-const provider = createOpenAICompatible({
+const provider = createGenApi({
 	baseURL: 'https://my.api.com/v1/',
 	name: 'test-provider',
 	headers: {
@@ -108,7 +108,7 @@ describe('doEmbed', () => {
 	it('should pass headers', async () => {
 		prepareJsonResponse()
 
-		const provider = createOpenAICompatible({
+		const provider = createGenApi({
 			baseURL: 'https://my.api.com/v1/',
 			name: 'test-provider',
 			headers: {

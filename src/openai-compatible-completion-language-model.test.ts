@@ -1,13 +1,13 @@
 import { LanguageModelV1Prompt } from '@ai-sdk/provider'
 import { convertReadableStreamToArray, JsonTestServer, StreamingTestServer } from '@ai-sdk/provider-utils/test'
-import { createOpenAICompatible } from './openai-compatible-provider'
+import { createGenApi } from './openai-compatible-provider'
 import { OpenAICompatibleChatLanguageModel } from './openai-compatible-chat-language-model'
 
 const TEST_PROMPT: LanguageModelV1Prompt = [
 	{ role: 'user', content: [{ type: 'text', text: 'Hello' }] },
 ]
 
-const provider = createOpenAICompatible({
+const provider = createGenApi({
 	baseURL: 'https://my.api.com/v1/',
 	name: 'test-provider',
 	headers: {
@@ -244,7 +244,7 @@ describe('doGenerate', () => {
 	it('should pass headers', async () => {
 		prepareJsonResponse({ content: '' })
 
-		const provider = createOpenAICompatible({
+		const provider = createGenApi({
 			baseURL: 'https://my.api.com/v1/',
 			name: 'test-provider',
 			headers: {
@@ -511,7 +511,7 @@ describe('doStream', () => {
 	it('should pass headers', async () => {
 		prepareStreamResponse({ content: [] })
 
-		const provider = createOpenAICompatible({
+		const provider = createGenApi({
 			baseURL: 'https://my.api.com/v1/',
 			name: 'test-provider',
 			headers: {

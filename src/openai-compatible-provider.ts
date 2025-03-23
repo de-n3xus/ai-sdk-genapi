@@ -77,7 +77,7 @@ or to provide a custom fetch implementation for e.g. testing.
 /**
 Create an OpenAICompatible provider instance.
  */
-export function createOpenAICompatible<
+export function createGenApi<
 	CHAT_MODEL_IDS extends string,
 	COMPLETION_MODEL_IDS extends string,
 	EMBEDDING_MODEL_IDS extends string,
