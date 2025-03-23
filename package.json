@@ -1,6 +1,6 @@
 {
 	"name": "ai-sdk-genapi",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"license": "Apache-2.0",
 	"sideEffects": false,
 	"main": "./dist/index.js",
@@ -58,10 +58,10 @@
 	"homepage": "https://sdk.vercel.ai/docs",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/vercel/ai.git"
+		"url": "git+https://github.com/de-n3xus/ai-sdk-genapi.git"
 	},
 	"bugs": {
-		"url": "https://github.com/vercel/ai/issues"
+		"url": "https://github.com/vercel/ai/ai-sdk-genapi"
 	},
 	"keywords": [
 		"ai"

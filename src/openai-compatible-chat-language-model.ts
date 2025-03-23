@@ -106,7 +106,7 @@ export class OpenAICompatibleChatLanguageModel implements LanguageModelV1 {
 			rawValue: rawResponse,
 		} = await postJsonToApi({
 			url: this.config.url({
-				path: '',
+				path: `/${this.modelId}`,
 				modelId: this.modelId,
 			}),
 			headers: combineHeaders(this.config.headers(), options.headers),
