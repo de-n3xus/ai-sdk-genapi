@@ -1,6 +1,6 @@
 {
 	"name": "ai-sdk-genapi",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"license": "Apache-2.0",
 	"sideEffects": false,
 	"main": "./dist/index.js",
@@ -8,13 +8,13 @@
 	"types": "./dist/index.d.ts",
 	"files": [
 		"dist/**/*",
-		"internal/dist/**/*",
-		"CHANGELOG.md"
+		"internal/dist/**/*"
 	],
 	"scripts": {
 		"build": "tsup",
 		"build:watch": "tsup --watch",
 		"clean": "rm -rf dist && rm -rf internal/dist",
+		"prepublish": "bun run build",
 		"lint": "eslint \"./**/*.ts*\"",
 		"type-check": "tsc --noEmit",
 		"prettier-check": "prettier --check \"./**/*.ts*\"",

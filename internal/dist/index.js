@@ -29,14 +29,14 @@ module.exports = __toCommonJS(index_exports);
 // src/convert-to-openai-compatible-chat-messages.ts
 var import_provider = require("@ai-sdk/provider");
 var import_provider_utils = require("@ai-sdk/provider-utils");
-function getOpenAIMetadata(message) {
+function getGenAPIMetadata(message) {
   var _a, _b;
   return (_b = (_a = message == null ? void 0 : message.providerMetadata) == null ? void 0 : _a.genApi) != null ? _b : {};
 }
 function convertToGenApiChatMessages(prompt) {
   const messages = [];
   for (const { role, content, ...message } of prompt) {
-    const metadata = getOpenAIMetadata({ ...message });
+    const metadata = getGenAPIMetadata({ ...message });
     switch (role) {
       case "system": {
         messages.push({ role: "system", content, ...metadata });
@@ -47,7 +47,7 @@ function convertToGenApiChatMessages(prompt) {
           messages.push({
             role: "user",
             content: content[0].text,
-            ...getOpenAIMetadata(content[0])
+            ...getGenAPIMetadata(content[0])
           });
           break;
         }
@@ -55,7 +55,7 @@ function convertToGenApiChatMessages(prompt) {
           role: "user",
           content: content.map((part) => {
             var _a;
-            const partMetadata = getOpenAIMetadata(part);
+            const partMetadata = getGenAPIMetadata(part);
             switch (part.type) {
               case "text": {
                 return { type: "text", text: part.text, ...partMetadata };
@@ -84,7 +84,7 @@ function convertToGenApiChatMessages(prompt) {
         let text = "";
         const toolCalls = [];
         for (const part of content) {
-          const partMetadata = getOpenAIMetadata(part);
+          const partMetadata = getGenAPIMetadata(part);
           switch (part.type) {
             case "text": {
               text += part.text;
@@ -114,7 +114,7 @@ function convertToGenApiChatMessages(prompt) {
       }
       case "tool": {
         for (const toolResponse of content) {
-          const toolResponseMetadata = getOpenAIMetadata(toolResponse);
+          const toolResponseMetadata = getGenAPIMetadata(toolResponse);
           messages.push({
             role: "tool",
             tool_call_id: toolResponse.toolCallId,

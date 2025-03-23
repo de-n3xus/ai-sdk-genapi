@@ -1,7 +1,7 @@
 import { LanguageModelV1Prompt } from '@ai-sdk/provider'
 import { convertReadableStreamToArray, JsonTestServer, StreamingTestServer } from '@ai-sdk/provider-utils/test'
-import { createGenApi } from './openai-compatible-provider'
-import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
+import { createGenApi } from './genapi-provider'
+import { GenApiChatLanguageModel } from './genapi-chat-language-model'
 
 const TEST_PROMPT: LanguageModelV1Prompt = [
 	{ role: 'user', content: [{ type: 'text', text: 'Hello' }] },
@@ -37,13 +37,13 @@ describe('config', () => {
 			'gpt-4',
 			{},
 			{
-				provider: 'openai',
+				provider: 'genapi',
 				url: () => '',
 				headers: () => ({}),
 			},
 		)
 
-		expect(model['providerOptionsName']).toBe('openai')
+		expect(model['providerOptionsName']).toBe('genapi')
 	})
 
 	it('should return empty for empty provider', () => {
@@ -269,8 +269,8 @@ describe('doGenerate', () => {
 			'content-type': 'application/json',
 			'custom-provider-header': 'provider-header-value',
 			'custom-request-header': 'request-header-value',
-			// 'openai-organization': 'test-organization',
-			// 'openai-project': 'test-project',
+			// 'genapi-organization': 'test-organization',
+			// 'genapi-project': 'test-project',
 		})
 	})
 
@@ -395,7 +395,7 @@ describe('doStream', () => {
 	it('should handle error stream parts', async () => {
 		server.responseChunks = [
 			`data: {"error":{"message": "The server had an error processing your request. Sorry about that! You can retry your request, or contact us through our ` +
-			`help center at help.openai.com if you keep seeing this error.","type":"server_error","param":null,"code":null}}\n\n`,
+			`help center at help.genapi.com if you keep seeing this error.","type":"server_error","param":null,"code":null}}\n\n`,
 			'data: [DONE]\n\n',
 		]
 
@@ -412,7 +412,7 @@ describe('doStream', () => {
 					message:
 						'The server had an error processing your request. Sorry about that! ' +
 						'You can retry your request, or contact us through our help center at ' +
-						'help.openai.com if you keep seeing this error.',
+						'help.genapi.com if you keep seeing this error.',
 					type: 'server_error',
 					code: null,
 					param: null,

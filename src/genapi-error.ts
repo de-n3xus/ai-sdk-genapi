@@ -5,7 +5,7 @@ export const genApiErrorDataSchema = z.object({
 		message: z.string(),
 
 		// The additional information below is handled loosely to support
-		// OpenAI-compatible providers that have slightly different error
+		// genapi providers that have slightly different error
 		// responses:
 		type: z.string().nullish(),
 		param: z.any().nullish(),

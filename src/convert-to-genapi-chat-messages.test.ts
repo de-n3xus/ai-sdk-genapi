@@ -1,4 +1,4 @@
-import { convertToGenApiChatMessages } from './convert-to-openai-compatible-chat-messages'
+import { convertToGenApiChatMessages } from './convert-to-genapi-chat-messages'
 
 describe('user messages', () => {
 	it('should convert messages with only a text part to a string content', async () => {

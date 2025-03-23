@@ -17,14 +17,14 @@ import {
 	ResponseHandler,
 } from '@ai-sdk/provider-utils'
 import { z } from 'zod'
-import { convertToGenApiCompletionPrompt } from './convert-to-openai-compatible-completion-prompt'
+import { convertToGenApiCompletionPrompt } from './convert-to-genapi-completion-prompt'
 import { getResponseMetadata } from './get-response-metadata'
-import { mapGenApiFinishReason } from './map-openai-compatible-finish-reason'
+import { mapGenApiFinishReason } from './map-genapi-finish-reason'
 import {
 	GenApiCompletionModelId,
 	GenApiCompletionSettings,
-} from './openai-compatible-completion-settings'
-import { defaultGenApiErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
+} from './genapi-completion-settings'
+import { defaultGenApiErrorStructure, ProviderErrorStructure } from './genapi-error'
 
 type GenApiCompletionConfig = {
 	provider: string;

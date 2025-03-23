@@ -1,11 +1,11 @@
 import { EmbeddingModelV1, LanguageModelV1, ProviderV1 } from '@ai-sdk/provider'
 import { FetchFunction, withoutTrailingSlash } from '@ai-sdk/provider-utils'
-import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
-import { GenApiChatSettings } from './openai-compatible-chat-settings'
-import { GenApiCompletionLanguageModel } from './openai-compatible-completion-language-model'
-import { GenApiCompletionSettings } from './openai-compatible-completion-settings'
-import { GenApiEmbeddingModel } from './openai-compatible-embedding-model'
-import { GenApiEmbeddingSettings } from './openai-compatible-embedding-settings'
+import { GenApiChatLanguageModel } from './genapi-chat-language-model'
+import { GenApiChatSettings } from './genapi-chat-settings'
+import { GenApiCompletionLanguageModel } from './genapi-completion-language-model'
+import { GenApiCompletionSettings } from './genapi-completion-settings'
+import { GenApiEmbeddingModel } from './genapi-embedding-model'
+import { GenApiEmbeddingSettings } from './genapi-embedding-settings'
 
 export interface GenApiProvider<
 	CHAT_MODEL_IDS extends string = string,
@@ -42,7 +42,7 @@ export interface GenApiProviderSettings {
 	/**
 Base URL for the API calls.
 	 */
-	baseURL: string;
+	baseURL?: string;
 
 	/**
 Provider name.
@@ -52,7 +52,7 @@ Provider name.
 	/**
 API key for authenticating requests. If specified, adds an `Authorization`
 header to request headers with the value `Bearer <apiKey>`. This will be added
-before any headers potentially specified in the `headers` option.
+before any headers potentially specified in the `headers` option. Default is `process.env.GENAPI_API_KEY`
 	 */
 	apiKey?: string;
 
@@ -88,7 +88,7 @@ export function createGenApi<
 	COMPLETION_MODEL_IDS,
 	EMBEDDING_MODEL_IDS
 > {
-	const baseURL = withoutTrailingSlash(options.baseURL)
+	const baseURL = withoutTrailingSlash(options.baseURL || 'https://api.gen-api.ru/api/v1/networks')
 	const providerName = options.name
 
 	interface CommonModelConfig {
@@ -99,7 +99,7 @@ export function createGenApi<
 	}
 
 	const getHeaders = () => ({
-		...(options.apiKey && { Authorization: `Bearer ${options.apiKey}` }),
+		...(options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : {Authorization: `Bearer ${process.env.GENAPI_API_KEY}`}),
 		...options.headers,
 	})
 

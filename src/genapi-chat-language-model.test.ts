@@ -5,8 +5,8 @@ import {
 	JsonTestServer,
 	StreamingTestServer,
 } from '@ai-sdk/provider-utils/test'
-import { createGenApi } from './openai-compatible-provider'
-import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
+import { createGenApi } from './genapi-provider'
+import { GenApiChatLanguageModel } from './genapi-chat-language-model'
 
 const TEST_PROMPT: LanguageModelV1Prompt = [
 	{ role: 'user', content: [{ type: 'text', text: 'Hello' }] },
@@ -42,13 +42,13 @@ describe('config', () => {
 			'gpt-4',
 			{},
 			{
-				provider: 'openai',
+				provider: 'genapi',
 				url: () => '',
 				headers: () => ({}),
 			},
 		)
 
-		expect(model['providerOptionsName']).toBe('openai')
+		expect(model['providerOptionsName']).toBe('genapi')
 	})
 
 	it('should return empty for empty provider', () => {

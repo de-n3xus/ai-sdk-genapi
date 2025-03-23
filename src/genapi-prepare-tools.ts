@@ -37,7 +37,7 @@ export function prepareTools ({
 
 	const toolChoice = mode.toolChoice
 
-	const openaiCompatTools: Array<{
+	const genapiCompatTools: Array<{
 		type: 'function';
 		function: {
 			name: string;
@@ -50,7 +50,7 @@ export function prepareTools ({
 		if (tool.type === 'provider-defined') {
 			toolWarnings.push({ type: 'unsupported-tool', tool })
 		} else {
-			openaiCompatTools.push({
+			genapiCompatTools.push({
 				type: 'function',
 				function: {
 					name: tool.name,
@@ -62,7 +62,7 @@ export function prepareTools ({
 	}
 
 	if (toolChoice == null) {
-		return { tools: openaiCompatTools, tool_choice: undefined, toolWarnings }
+		return { tools: genapiCompatTools, tool_choice: undefined, toolWarnings }
 	}
 
 	const type = toolChoice.type
@@ -71,10 +71,10 @@ export function prepareTools ({
 		case 'auto':
 		case 'none':
 		case 'required':
-			return { tools: openaiCompatTools, tool_choice: type, toolWarnings }
+			return { tools: genapiCompatTools, tool_choice: type, toolWarnings }
 		case 'tool':
 			return {
-				tools: openaiCompatTools,
+				tools: genapiCompatTools,
 				tool_choice: {
 					type: 'function',
 					function: {

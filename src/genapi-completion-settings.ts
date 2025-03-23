@@ -28,7 +28,7 @@ The suffix that comes after a completion of inserted text.
 	suffix?: string;
 
 	/**
-A unique identifier representing your end-user, which can help OpenAI to
+A unique identifier representing your end-user, which can help GenAPI to
 monitor and detect abuse. Learn more.
 	 */
 	user?: string;

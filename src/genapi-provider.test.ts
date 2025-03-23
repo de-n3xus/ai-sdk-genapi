@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { createGenApi } from './openai-compatible-provider'
-import { GenApiChatLanguageModel } from './openai-compatible-chat-language-model'
-import { GenApiCompletionLanguageModel } from './openai-compatible-completion-language-model'
-import { GenApiEmbeddingModel } from './openai-compatible-embedding-model'
-import { GenApiChatSettings } from './openai-compatible-chat-settings'
+import { createGenApi } from './genapi-provider'
+import { GenApiChatLanguageModel } from './genapi-chat-language-model'
+import { GenApiCompletionLanguageModel } from './genapi-completion-language-model'
+import { GenApiEmbeddingModel } from './genapi-embedding-model'
+import { GenApiChatSettings } from './genapi-chat-settings'
 
 const GenApiChatLanguageModelMock = vi.mocked(
 	GenApiChatLanguageModel,
@@ -15,15 +15,15 @@ const GenApiEmbeddingModelMock = vi.mocked(
 	GenApiEmbeddingModel,
 )
 
-vi.mock('./openai-compatible-chat-language-model', () => ({
+vi.mock('./genapi-chat-language-model', () => ({
 	GenApiChatLanguageModel: vi.fn(),
 }))
 
-vi.mock('./openai-compatible-completion-language-model', () => ({
+vi.mock('./genapi-completion-language-model', () => ({
 	GenApiCompletionLanguageModel: vi.fn(),
 }))
 
-vi.mock('./openai-compatible-embedding-model', () => ({
+vi.mock('./genapi-embedding-model', () => ({
 	GenApiEmbeddingModel: vi.fn(),
 }))
 

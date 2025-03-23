@@ -4,9 +4,9 @@ import {
 	UnsupportedFunctionalityError,
 } from '@ai-sdk/provider'
 import { convertUint8ArrayToBase64 } from '@ai-sdk/provider-utils'
-import { GenApiChatPrompt } from './openai-compatible-api-types'
+import { GenApiChatPrompt } from './genapi-api-types'
 
-function getOpenAIMetadata (message: {
+function getGenAPIMetadata (message: {
 	providerMetadata?: LanguageModelV1ProviderMetadata;
 }) {
 	return message?.providerMetadata?.genApi ?? {}
@@ -17,7 +17,7 @@ export function convertToGenApiChatMessages (
 ): GenApiChatPrompt {
 	const messages: GenApiChatPrompt = []
 	for (const { role, content, ...message } of prompt) {
-		const metadata = getOpenAIMetadata({ ...message })
+		const metadata = getGenAPIMetadata({ ...message })
 		switch (role) {
 			case 'system': {
 				messages.push({ role: 'system', content, ...metadata })
@@ -29,7 +29,7 @@ export function convertToGenApiChatMessages (
 					messages.push({
 						role: 'user',
 						content: content[0].text,
-						...getOpenAIMetadata(content[0]),
+						...getGenAPIMetadata(content[0]),
 					})
 					break
 				}
@@ -37,7 +37,7 @@ export function convertToGenApiChatMessages (
 				messages.push({
 					role: 'user',
 					content: content.map(part => {
-						const partMetadata = getOpenAIMetadata(part)
+						const partMetadata = getGenAPIMetadata(part)
 						switch (part.type) {
 							case 'text': {
 								return { type: 'text', text: part.text, ...partMetadata }
@@ -78,7 +78,7 @@ export function convertToGenApiChatMessages (
 				}> = []
 
 				for (const part of content) {
-					const partMetadata = getOpenAIMetadata(part)
+					const partMetadata = getGenAPIMetadata(part)
 					switch (part.type) {
 						case 'text': {
 							text += part.text
@@ -111,7 +111,7 @@ export function convertToGenApiChatMessages (
 
 			case 'tool': {
 				for (const toolResponse of content) {
-					const toolResponseMetadata = getOpenAIMetadata(toolResponse)
+					const toolResponseMetadata = getGenAPIMetadata(toolResponse)
 					messages.push({
 						role: 'tool',
 						tool_call_id: toolResponse.toolCallId,

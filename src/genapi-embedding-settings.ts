@@ -8,7 +8,7 @@ Only supported in text-embedding-3 and later models.
 	dimensions?: number;
 
 	/**
-A unique identifier representing your end-user, which can help OpenAI to
+A unique identifier representing your end-user, which can help GenAPI to
 monitor and detect abuse. Learn more.
 	 */
 	user?: string;

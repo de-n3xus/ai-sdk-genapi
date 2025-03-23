@@ -20,13 +20,13 @@ import {
 	ResponseHandler,
 } from '@ai-sdk/provider-utils'
 import { z } from 'zod'
-import { convertToGenApiChatMessages } from './convert-to-openai-compatible-chat-messages'
+import { convertToGenApiChatMessages } from './convert-to-genapi-chat-messages'
 import { getResponseMetadata } from './get-response-metadata'
-import { mapGenApiFinishReason } from './map-openai-compatible-finish-reason'
-import { GenApiChatModelId, GenApiChatSettings } from './openai-compatible-chat-settings'
-import { defaultGenApiErrorStructure, ProviderErrorStructure } from './openai-compatible-error'
-import { prepareTools } from './openai-compatible-prepare-tools'
-import { MetadataExtractor } from './openai-compatible-metadata-extractor'
+import { mapGenApiFinishReason } from './map-genapi-finish-reason'
+import { GenApiChatModelId, GenApiChatSettings } from './genapi-chat-settings'
+import { defaultGenApiErrorStructure, ProviderErrorStructure } from './genapi-error'
+import { prepareTools } from './genapi-prepare-tools'
+import { MetadataExtractor } from './genapi-metadata-extractor'
 
 export type GenApiChatConfig = {
 	provider: string;

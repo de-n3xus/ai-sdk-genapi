@@ -1,6 +1,6 @@
 import { EmbeddingModelV1Embedding } from '@ai-sdk/provider'
 import { JsonTestServer } from '@ai-sdk/provider-utils/test'
-import { createGenApi } from './openai-compatible-provider'
+import { createGenApi } from './genapi-provider'
 
 const dummyEmbeddings = [
 	[0.1, 0.2, 0.3, 0.4, 0.5],

@@ -1,37 +1,37 @@
-# AI SDK - OpenAI Compatible Provider
+# AI SDK - GenAPI Provider
 
-This package provides a foundation for implementing providers that expose an OpenAI-compatible API.
-
-The primary [OpenAI provider](../openai/README.md) is more feature-rich, including OpenAI-specific experimental and legacy features. This package offers a lighter-weight alternative focused on core OpenAI-compatible functionality.
+This package is made from `ai-sdk-genapi` for [GenApi](https://gen-api.ru)
 
 ## Setup
 
-The provider is available in the `@ai-sdk/openai-compatible` module. You can install it with
+The provider is available in the `ai-sdk-genapi` module. You can install it with
 
 ```bash
-npm i @ai-sdk/openai-compatible
+npm i ai-sdk-genapi
 ```
 
 ## Provider Instance
 
-You can import the provider creation method `createOpenAICompatible` from `@ai-sdk/openai-compatible`:
+You can import the provider creation method `createGenApi` from `ai-sdk-genapi`:
 
 ```ts
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createGenApi } from 'ai-sdk-genapi';
 ```
+
+## Api Key
+`apiKey` is not required in params, default value is `process.env.GENAPI_API_KEY`
 
 ## Example
 
 ```ts
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createGenApi } from 'ai-sdk-genapi';
 import { generateText } from 'ai';
 
 const { text } = await generateText({
-  model: createOpenAICompatible({
-    baseURL: 'https://api.example.com/v1',
+  model: createGenApi({
     name: 'example',
     apiKey: process.env.MY_API_KEY,
-  }).chatModel('meta-llama/Llama-3-70b-chat-hf'),
+  }).chatModel('gpt-4o-mini'),
   prompt: 'Write a vegetarian lasagna recipe for 4 people.',
 });
 ```
@@ -41,17 +41,16 @@ const { text } = await generateText({
 You can further customize headers if desired. For example, here is an alternate implementation to pass along api key authentication:
 
 ```ts
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createGenApi } from 'ai-sdk-genapi';
 import { generateText } from 'ai';
 
 const { text } = await generateText({
-  model: createOpenAICompatible({
-    baseURL: 'https://api.example.com/v1',
+  model: createGenApi({
     name: 'example',
     headers: {
       Authorization: `Bearer ${process.env.MY_API_KEY}`,
     },
-  }).chatModel('meta-llama/Llama-3-70b-chat-hf'),
+  }).chatModel('gpt-4o-mini'),
   prompt: 'Write a vegetarian lasagna recipe for 4 people.',
 });
 ```
@@ -59,30 +58,29 @@ const { text } = await generateText({
 ### Including model ids for auto-completion
 
 ```ts
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { createGenApi } from 'ai-sdk-genapi';
 import { generateText } from 'ai';
 
 type ExampleChatModelIds =
-  | 'meta-llama/Llama-3-70b-chat-hf'
-  | 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'
+  | 'gpt-4o-mini'
+  | 'claude'
   | (string & {});
 
 type ExampleCompletionModelIds =
-  | 'codellama/CodeLlama-34b-Instruct-hf'
-  | 'Qwen/Qwen2.5-Coder-32B-Instruct'
+  | 'deepseek-r1'
+  | 'o1-mini'
   | (string & {});
 
 type ExampleEmbeddingModelIds =
-  | 'BAAI/bge-large-en-v1.5'
-  | 'bert-base-uncased'
+  | 'embeddings'
+  | 'recraft
   | (string & {});
 
-const model = createOpenAICompatible<
+const model = createGenApi<
   ExampleChatModelIds,
   ExampleCompletionModelIds,
   ExampleEmbeddingModelIds
 >({
-  baseURL: 'https://api.example.com/v1',
   name: 'example',
   apiKey: process.env.MY_API_KEY,
 });
@@ -92,9 +90,7 @@ const model = createOpenAICompatible<
 // strings as well.
 
 const { text } = await generateText({
-  model: model.chatModel('meta-llama/Llama-3-70b-chat-hf'),
+  model: model.chatModel('gpt-4o-mini'),
   prompt: 'Write a vegetarian lasagna recipe for 4 people.',
 });
 ```
-
-For more examples, see the [OpenAI Compatible Providers](https://sdk.vercel.ai/providers/openai-compatible-providers) documentation.
