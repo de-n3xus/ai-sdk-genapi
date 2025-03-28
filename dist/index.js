@@ -1158,7 +1158,7 @@ var genapiTextEmbeddingResponseSchema = import_zod4.z.object({
 // src/genapi-provider.ts
 var import_provider_utils5 = require("@ai-sdk/provider-utils");
 function createGenApi(options) {
-  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL || `https://api.gen-api.ru/api/v1/networks`);
+  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`);
   const providerName = options.name;
   const getHeaders = () => ({
     ...options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : { Authorization: `Bearer ${process.env.GENAPI_API_KEY}` },
@@ -1171,7 +1171,13 @@ function createGenApi(options) {
       if (options.queryParams) {
         url.search = new URLSearchParams(options.queryParams).toString();
       }
-      return url.toString();
+      let l = url.toString();
+      let ll = l.split("/");
+      if (ll.pop() === ll[ll.length - 2]) {
+        delete ll[ll.length - 1];
+        l = ll.join("/");
+      }
+      return l;
     },
     headers: getHeaders,
     fetch: options.fetch

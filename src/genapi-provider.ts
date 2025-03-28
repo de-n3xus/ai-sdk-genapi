@@ -88,7 +88,7 @@ export function createGenApi<
 	COMPLETION_MODEL_IDS,
 	EMBEDDING_MODEL_IDS
 > {
-	const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks`)
+	const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`)
 	const providerName = options.name
 
 	interface CommonModelConfig {
@@ -113,7 +113,16 @@ export function createGenApi<
 			if (options.queryParams) {
 				url.search = new URLSearchParams(options.queryParams).toString()
 			}
-			return url.toString()
+
+			let l = url.toString()
+			let ll = l.split('/')
+
+			if (ll.pop() === ll[ll.length - 2]) {
+				delete ll[ll.length - 1]
+				l = ll.join('/')
+			}
+
+			return l
 		},
 		headers: getHeaders,
 		fetch: options.fetch,
