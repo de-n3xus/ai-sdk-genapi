@@ -255,7 +255,7 @@ var GenApiChatLanguageModel = class {
   async doGenerate(options) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const { args, warnings } = this.getArgs({ ...options });
-    const body = JSON.stringify(args);
+    const body = JSON.stringify({ ...args, is_sync: this.settings.is_sync });
     const {
       responseHeaders,
       value: responseBody,

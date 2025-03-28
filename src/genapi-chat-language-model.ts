@@ -98,7 +98,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 	): Promise<Awaited<ReturnType<LanguageModelV1['doGenerate']>>> {
 		const { args, warnings } = this.getArgs({ ...options })
 
-		const body = JSON.stringify(args)
+		const body = JSON.stringify({ ...args, is_sync: this.settings.is_sync })
 
 		// this.config.provider
 
