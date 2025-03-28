@@ -23,7 +23,7 @@ import { z } from 'zod'
 import { convertToGenApiChatMessages } from './convert-to-genapi-chat-messages'
 import { getResponseMetadata } from './get-response-metadata'
 import { mapGenApiFinishReason } from './map-genapi-finish-reason'
-import { GenApiChatModelId, GenApiChatSettings } from './genapi-chat-settings'
+import { GenApiChatModelId, GenApiChatSettings, GenApiChatSubModelId } from './genapi-chat-settings'
 import { defaultGenApiErrorStructure, ProviderErrorStructure } from './genapi-error'
 import { prepareTools } from './genapi-prepare-tools'
 import { MetadataExtractor } from './genapi-metadata-extractor'
@@ -55,6 +55,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 	readonly supportsStructuredOutputs: boolean
 
 	readonly modelId: GenApiChatModelId
+	readonly subModelId: GenApiChatSubModelId
 	readonly settings: GenApiChatSettings
 
 	private readonly config: GenApiChatConfig
@@ -109,7 +110,10 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 				path: `/${this.modelId}`,
 				modelId: this.modelId,
 			}),
-			headers: combineHeaders(this.config.headers(), options.headers),
+			headers: combineHeaders(
+				this.config.headers(),
+				options.headers,
+			),
 			body: args,
 			failedResponseHandler: this.failedResponseHandler,
 			successfulResponseHandler: createJsonResponseHandler(
@@ -452,20 +456,22 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 		}
 	}
 
-	private getArgs ({
-		                 mode,
-		                 prompt,
-		                 maxTokens,
-		                 temperature,
-		                 topP,
-		                 topK,
-		                 frequencyPenalty,
-		                 presencePenalty,
-		                 providerMetadata,
-		                 stopSequences,
-		                 responseFormat,
-		                 seed,
-	                 }: Parameters<LanguageModelV1['doGenerate']>[0]) {
+	private getArgs (
+		{
+			mode,
+			prompt,
+			maxTokens,
+			temperature,
+			topP,
+			topK,
+			frequencyPenalty,
+			presencePenalty,
+			providerMetadata,
+			stopSequences,
+			responseFormat,
+			seed,
+		}: Parameters<LanguageModelV1['doGenerate']>[0],
+	) {
 		const type = mode.type
 
 		const warnings: LanguageModelV1CallWarning[] = []
@@ -492,7 +498,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 
 		const baseArgs = {
 			// model id:
-			model: this.modelId,
+			model: this.subModelId ? this.subModelId : this.modelId,
 
 			// model specific settings:
 			user: this.settings.user,

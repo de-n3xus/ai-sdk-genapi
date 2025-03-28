@@ -265,7 +265,10 @@ var GenApiChatLanguageModel = class {
         path: `/${this.modelId}`,
         modelId: this.modelId
       }),
-      headers: combineHeaders(this.config.headers(), options.headers),
+      headers: combineHeaders(
+        this.config.headers(),
+        options.headers
+      ),
       body: args,
       failedResponseHandler: this.failedResponseHandler,
       successfulResponseHandler: createJsonResponseHandler(
@@ -575,7 +578,7 @@ var GenApiChatLanguageModel = class {
     }
     const baseArgs = {
       // model id:
-      model: this.modelId,
+      model: this.subModelId ? this.subModelId : this.modelId,
       // model specific settings:
       user: this.settings.user,
       // standardized settings:
