@@ -279,13 +279,10 @@ var GenApiChatLanguageModel = class {
       rawValue: rawResponse
     } = await (0, import_provider_utils2.postJsonToApi)({
       url: this.config.url({
-        path: `/${this.modelId}`,
+        path: `/${this.providerOptionsName}`,
         modelId: this.modelId
       }),
-      headers: (0, import_provider_utils2.combineHeaders)(
-        this.config.headers(),
-        options.headers
-      ),
+      headers: (0, import_provider_utils2.combineHeaders)(this.config.headers(), options.headers),
       body: args,
       failedResponseHandler: this.failedResponseHandler,
       successfulResponseHandler: (0, import_provider_utils2.createJsonResponseHandler)(
@@ -384,7 +381,7 @@ var GenApiChatLanguageModel = class {
     const metadataExtractor = (_a = this.config.metadataExtractor) == null ? void 0 : _a.createStreamExtractor();
     const { responseHeaders, value: response } = await (0, import_provider_utils2.postJsonToApi)({
       url: this.config.url({
-        path: `/${this.modelId}`,
+        path: `/${this.providerOptionsName}`,
         modelId: this.modelId
       }),
       headers: (0, import_provider_utils2.combineHeaders)(this.config.headers(), options.headers),
@@ -595,7 +592,7 @@ var GenApiChatLanguageModel = class {
     }
     const baseArgs = {
       // model id:
-      model: this.subModelId ? this.subModelId : this.modelId,
+      model: this.modelId,
       // model specific settings:
       user: this.settings.user,
       // standardized settings:
@@ -1161,7 +1158,7 @@ var genapiTextEmbeddingResponseSchema = import_zod4.z.object({
 // src/genapi-provider.ts
 var import_provider_utils5 = require("@ai-sdk/provider-utils");
 function createGenApi(options) {
-  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL || "https://api.gen-api.ru/api/v1/networks");
+  const baseURL = (0, import_provider_utils5.withoutTrailingSlash)(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`);
   const providerName = options.name;
   const getHeaders = () => ({
     ...options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : { Authorization: `Bearer ${process.env.GENAPI_API_KEY}` },

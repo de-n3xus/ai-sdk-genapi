@@ -3,7 +3,6 @@ import { FetchFunction } from '@ai-sdk/provider-utils';
 import { ZodSchema, z } from 'zod';
 
 type GenApiChatModelId = string;
-type GenApiChatSubModelId = string | undefined;
 interface GenApiChatSettings {
     /**
 A unique identifier representing your end-user, which can help the provider to
@@ -17,10 +16,6 @@ Enable this if the model that you are using does not support streaming.
 Defaults to `false`.
      */
     simulateStreaming?: boolean;
-    /**
-     * Submodel for request `model` field, like a main model is `Claude` and `subModel` is `claude-3-haiku-20240307`
-     */
-    subModel?: string;
 }
 
 declare const genApiErrorDataSchema: z.ZodObject<{
@@ -130,7 +125,6 @@ declare class GenApiChatLanguageModel implements LanguageModelV1 {
     readonly specificationVersion = "v1";
     readonly supportsStructuredOutputs: boolean;
     readonly modelId: GenApiChatModelId;
-    readonly subModelId: GenApiChatSubModelId;
     readonly settings: GenApiChatSettings;
     private readonly config;
     private readonly failedResponseHandler;

@@ -262,13 +262,10 @@ var GenApiChatLanguageModel = class {
       rawValue: rawResponse
     } = await postJsonToApi({
       url: this.config.url({
-        path: `/${this.modelId}`,
+        path: `/${this.providerOptionsName}`,
         modelId: this.modelId
       }),
-      headers: combineHeaders(
-        this.config.headers(),
-        options.headers
-      ),
+      headers: combineHeaders(this.config.headers(), options.headers),
       body: args,
       failedResponseHandler: this.failedResponseHandler,
       successfulResponseHandler: createJsonResponseHandler(
@@ -367,7 +364,7 @@ var GenApiChatLanguageModel = class {
     const metadataExtractor = (_a = this.config.metadataExtractor) == null ? void 0 : _a.createStreamExtractor();
     const { responseHeaders, value: response } = await postJsonToApi({
       url: this.config.url({
-        path: `/${this.modelId}`,
+        path: `/${this.providerOptionsName}`,
         modelId: this.modelId
       }),
       headers: combineHeaders(this.config.headers(), options.headers),
@@ -578,7 +575,7 @@ var GenApiChatLanguageModel = class {
     }
     const baseArgs = {
       // model id:
-      model: this.subModelId ? this.subModelId : this.modelId,
+      model: this.modelId,
       // model specific settings:
       user: this.settings.user,
       // standardized settings:
@@ -1157,7 +1154,7 @@ var genapiTextEmbeddingResponseSchema = z4.object({
 // src/genapi-provider.ts
 import { withoutTrailingSlash } from "@ai-sdk/provider-utils";
 function createGenApi(options) {
-  const baseURL = withoutTrailingSlash(options.baseURL || "https://api.gen-api.ru/api/v1/networks");
+  const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`);
   const providerName = options.name;
   const getHeaders = () => ({
     ...options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : { Authorization: `Bearer ${process.env.GENAPI_API_KEY}` },

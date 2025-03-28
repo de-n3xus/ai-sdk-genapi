@@ -88,7 +88,7 @@ export function createGenApi<
 	COMPLETION_MODEL_IDS,
 	EMBEDDING_MODEL_IDS
 > {
-	const baseURL = withoutTrailingSlash(options.baseURL || 'https://api.gen-api.ru/api/v1/networks')
+	const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`)
 	const providerName = options.name
 
 	interface CommonModelConfig {
@@ -99,7 +99,10 @@ export function createGenApi<
 	}
 
 	const getHeaders = () => ({
-		...(options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : {Authorization: `Bearer ${process.env.GENAPI_API_KEY}`}),
+		...(options.apiKey
+			? { Authorization: `Bearer ${options.apiKey}` } :
+			{ Authorization: `Bearer ${process.env.GENAPI_API_KEY}` }
+		),
 		...options.headers,
 	})
 

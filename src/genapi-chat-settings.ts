@@ -1,5 +1,4 @@
 export type GenApiChatModelId = string;
-export type GenApiChatSubModelId = string | undefined;
 
 export interface GenApiChatSettings {
 	/**
@@ -15,9 +14,4 @@ Enable this if the model that you are using does not support streaming.
 Defaults to `false`.
 	 */
 	simulateStreaming?: boolean;
-
-	/**
-	 * Submodel for request `model` field, like a main model is `Claude` and `subModel` is `claude-3-haiku-20240307`
-	 */
-	subModel?: string,
 }
