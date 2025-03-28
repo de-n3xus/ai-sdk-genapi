@@ -108,7 +108,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 			rawValue: rawResponse,
 		} = await postJsonToApi({
 			url: this.config.url({
-				path: `/${this.providerOptionsName?.split?.('/')?.[0]}`,
+				path: `/`,
 				modelId: this.modelId,
 			}),
 			headers: combineHeaders(this.config.headers(), options.headers),
@@ -215,7 +215,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 
 		const { responseHeaders, value: response } = await postJsonToApi({
 			url: this.config.url({
-				path: `/${this.providerOptionsName?.split?.('/')?.[0]}`,
+				path: `/`,
 				modelId: this.modelId,
 			}),
 			headers: combineHeaders(this.config.headers(), options.headers),

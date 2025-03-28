@@ -270,7 +270,7 @@ var GenApiChatLanguageModel = class {
     return this.config.provider.split(".")[0].trim();
   }
   async doGenerate(options) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const { args, warnings } = this.getArgs({ ...options });
     const body = JSON.stringify(args);
     const {
@@ -279,7 +279,7 @@ var GenApiChatLanguageModel = class {
       rawValue: rawResponse
     } = await (0, import_provider_utils2.postJsonToApi)({
       url: this.config.url({
-        path: `/${(_c = (_b = (_a = this.providerOptionsName) == null ? void 0 : _a.split) == null ? void 0 : _b.call(_a, "/")) == null ? void 0 : _c[0]}`,
+        path: `/`,
         modelId: this.modelId
       }),
       headers: (0, import_provider_utils2.combineHeaders)(this.config.headers(), options.headers),
@@ -293,13 +293,13 @@ var GenApiChatLanguageModel = class {
     });
     const { messages: rawPrompt, ...rawSettings } = args;
     const choice = responseBody.choices[0];
-    const providerMetadata = (_e = (_d = this.config.metadataExtractor) == null ? void 0 : _d.extractMetadata) == null ? void 0 : _e.call(_d, {
+    const providerMetadata = (_b = (_a = this.config.metadataExtractor) == null ? void 0 : _a.extractMetadata) == null ? void 0 : _b.call(_a, {
       parsedBody: rawResponse
     });
     return {
-      text: (_f = choice.message.content) != null ? _f : void 0,
-      reasoning: (_g = choice.message.reasoning_content) != null ? _g : void 0,
-      toolCalls: (_h = choice.message.tool_calls) == null ? void 0 : _h.map((toolCall) => {
+      text: (_c = choice.message.content) != null ? _c : void 0,
+      reasoning: (_d = choice.message.reasoning_content) != null ? _d : void 0,
+      toolCalls: (_e = choice.message.tool_calls) == null ? void 0 : _e.map((toolCall) => {
         var _a2;
         return {
           toolCallType: "function",
@@ -310,8 +310,8 @@ var GenApiChatLanguageModel = class {
       }),
       finishReason: mapGenApiFinishReason(choice.finish_reason),
       usage: {
-        promptTokens: (_j = (_i = responseBody.usage) == null ? void 0 : _i.prompt_tokens) != null ? _j : NaN,
-        completionTokens: (_l = (_k = responseBody.usage) == null ? void 0 : _k.completion_tokens) != null ? _l : NaN
+        promptTokens: (_g = (_f = responseBody.usage) == null ? void 0 : _f.prompt_tokens) != null ? _g : NaN,
+        completionTokens: (_i = (_h = responseBody.usage) == null ? void 0 : _h.completion_tokens) != null ? _i : NaN
       },
       ...providerMetadata && { providerMetadata },
       rawCall: { rawPrompt, rawSettings },
@@ -322,7 +322,7 @@ var GenApiChatLanguageModel = class {
     };
   }
   async doStream(options) {
-    var _a, _b, _c, _d;
+    var _a;
     if (this.settings.simulateStreaming) {
       const result = await this.doGenerate(options);
       const simulatedStream = new ReadableStream({
@@ -381,7 +381,7 @@ var GenApiChatLanguageModel = class {
     const metadataExtractor = (_a = this.config.metadataExtractor) == null ? void 0 : _a.createStreamExtractor();
     const { responseHeaders, value: response } = await (0, import_provider_utils2.postJsonToApi)({
       url: this.config.url({
-        path: `/${(_d = (_c = (_b = this.providerOptionsName) == null ? void 0 : _b.split) == null ? void 0 : _c.call(_b, "/")) == null ? void 0 : _d[0]}`,
+        path: `/`,
         modelId: this.modelId
       }),
       headers: (0, import_provider_utils2.combineHeaders)(this.config.headers(), options.headers),
@@ -409,7 +409,7 @@ var GenApiChatLanguageModel = class {
         new TransformStream({
           // TODO we lost type safety on Chunk, most likely due to the error schema. MUST FIX
           transform(chunk, controller) {
-            var _a2, _b2, _c2, _d2, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+            var _a2, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
             if (!chunk.success) {
               finishReason = "error";
               controller.enqueue({ type: "error", error: chunk.error });
@@ -432,7 +432,7 @@ var GenApiChatLanguageModel = class {
             if (value.usage != null) {
               usage = {
                 promptTokens: (_a2 = value.usage.prompt_tokens) != null ? _a2 : void 0,
-                completionTokens: (_b2 = value.usage.completion_tokens) != null ? _b2 : void 0
+                completionTokens: (_b = value.usage.completion_tokens) != null ? _b : void 0
               };
             }
             const choice = value.choices[0];
@@ -473,7 +473,7 @@ var GenApiChatLanguageModel = class {
                       message: `Expected 'id' to be a string.`
                     });
                   }
-                  if (((_c2 = toolCallDelta.function) == null ? void 0 : _c2.name) == null) {
+                  if (((_c = toolCallDelta.function) == null ? void 0 : _c.name) == null) {
                     throw new import_provider3.InvalidResponseDataError({
                       data: toolCallDelta,
                       message: `Expected 'function.name' to be a string.`
@@ -484,7 +484,7 @@ var GenApiChatLanguageModel = class {
                     type: "function",
                     function: {
                       name: toolCallDelta.function.name,
-                      arguments: (_d2 = toolCallDelta.function.arguments) != null ? _d2 : ""
+                      arguments: (_d = toolCallDelta.function.arguments) != null ? _d : ""
                     },
                     hasFinished: false
                   };
@@ -540,14 +540,14 @@ var GenApiChatLanguageModel = class {
             }
           },
           flush(controller) {
-            var _a2, _b2;
+            var _a2, _b;
             const metadata = metadataExtractor == null ? void 0 : metadataExtractor.buildMetadata();
             controller.enqueue({
               type: "finish",
               finishReason,
               usage: {
                 promptTokens: (_a2 = usage.promptTokens) != null ? _a2 : NaN,
-                completionTokens: (_b2 = usage.completionTokens) != null ? _b2 : NaN
+                completionTokens: (_b = usage.completionTokens) != null ? _b : NaN
               },
               ...metadata && { providerMetadata: metadata }
             });
