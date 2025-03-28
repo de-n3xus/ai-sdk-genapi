@@ -66,8 +66,10 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 		modelId: GenApiChatModelId,
 		settings: GenApiChatSettings,
 		config: GenApiChatConfig,
+		subModel: GenApiChatSubModelId,
 	) {
 		this.modelId = modelId
+		this.subModelId = subModel
 		this.settings = settings
 		this.config = config
 
@@ -108,7 +110,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 		} = await postJsonToApi({
 			url: this.config.url({
 				path: `/${this.modelId}`,
-				modelId: this.modelId,
+				modelId: this.subModelId ? this.subModelId : this.modelId,
 			}),
 			headers: combineHeaders(
 				this.config.headers(),
@@ -218,7 +220,7 @@ export class GenApiChatLanguageModel implements LanguageModelV1 {
 		const { responseHeaders, value: response } = await postJsonToApi({
 			url: this.config.url({
 				path: `/${this.modelId}`,
-				modelId: this.modelId,
+				modelId: this.subModelId ? this.subModelId : this.modelId,
 			}),
 			headers: combineHeaders(this.config.headers(), options.headers),
 			body: {
