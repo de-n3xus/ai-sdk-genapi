@@ -1154,7 +1154,7 @@ var genapiTextEmbeddingResponseSchema = z4.object({
 // src/genapi-provider.ts
 import { withoutTrailingSlash } from "@ai-sdk/provider-utils";
 function createGenApi(options) {
-  const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`);
+  const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks`);
   const providerName = options.name;
   const getHeaders = () => ({
     ...options.apiKey ? { Authorization: `Bearer ${options.apiKey}` } : { Authorization: `Bearer ${process.env.GENAPI_API_KEY}` },

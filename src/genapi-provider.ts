@@ -88,7 +88,7 @@ export function createGenApi<
 	COMPLETION_MODEL_IDS,
 	EMBEDDING_MODEL_IDS
 > {
-	const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks/${options.name}`)
+	const baseURL = withoutTrailingSlash(options.baseURL || `https://api.gen-api.ru/api/v1/networks`)
 	const providerName = options.name
 
 	interface CommonModelConfig {
